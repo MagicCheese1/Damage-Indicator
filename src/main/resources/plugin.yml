@@ -1,0 +1,9 @@
+main: com.github.poxiton.Main
+name: JoinPlugin
+version: 1.0
+author: Poxiton
+description: This is a JoinPlugin
+commands:
+  info:
+    description: Server info
+    usage: /<command>
