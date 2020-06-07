@@ -1,5 +1,3 @@
 main: com.github.poxiton.Main
-name: Damage Indicator
+name: DamageIndicator
 version: 1.0
-author: Poxiton
-description: This is a Damage Indicator plugin
