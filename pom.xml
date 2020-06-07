@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.poxiton</groupId>
-  <artifactId>JoinPlugin</artifactId>
+  <artifactId>DamageIndicator</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-  <name>JoinPlugin</name>
+  <name>Damage Indicator</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 

@@ -1,9 +1,5 @@
 main: com.github.poxiton.Main
-name: JoinPlugin
+name: Damage Indicator
 version: 1.0
 author: Poxiton
-description: This is a JoinPlugin
-commands:
-  info:
-    description: Server info
-    usage: /<command>
+description: This is a Damage Indicator plugin
