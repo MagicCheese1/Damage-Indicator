@@ -6,9 +6,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -19,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
-//TODO: config file
 public class DamageIndicatorListener implements Listener {
   private JavaPlugin plugin;
   private EntityHider entityHider;
