@@ -6,24 +6,29 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
 
+//TODO: config file
 public class DamageIndicatorListener implements Listener {
   private JavaPlugin plugin;
+  private EntityHider entityHider;
+  FileConfiguration config;
 
-  DamageIndicatorListener(JavaPlugin plugin) {
+  DamageIndicatorListener(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config) {
     this.plugin = plugin;
+    this.entityHider = entityHider;
+    this.config = config;
   }
 
   @EventHandler
@@ -34,29 +39,33 @@ public class DamageIndicatorListener implements Listener {
     // Only show indicator if the damager was a player or an arrow
     if (!(event.getDamager().getType() == EntityType.PLAYER || event.getDamager().getType() == EntityType.ARROW))
       return;
+    Player damager;
     Location spawnLocation;
     Random random = new Random();
+    ChatColor IndicatorColor = ChatColor.getByChar(config.getString("HitColor"));
     do {
       spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
           random.nextDouble() * (1.0 + 1.0) - 1.0);
     } while (!spawnLocation.getBlock().isPassable());
-    final ArmorStand as = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
-        new invisibleArmorStand());
-    ChatColor IndicatorColor = ChatColor.GRAY;
     if (event.getDamager().getType() == EntityType.ARROW) {
       Arrow arrow = (Arrow) event.getDamager();
       if (!(arrow.getShooter() instanceof Player)) {
         return;
       }
+      damager = (Player) arrow.getShooter();
       if (arrow.isCritical())
-        IndicatorColor = ChatColor.DARK_RED;
+        IndicatorColor = ChatColor.getByChar(config.getString("CriticalHitColor"));
     } else {
-      Player Damager = (Player) event.getDamager();
-      if (isCritical(Damager))
-        IndicatorColor = ChatColor.DARK_RED;
+      damager = (Player) event.getDamager();
+      if (isCritical(damager))
+        IndicatorColor = ChatColor.getByChar(config.getString("CriticalHitColor"));
     }
+    final ArmorStand as = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
+        new InvisibleArmorStand(plugin, damager, entityHider, config.getBoolean("ShowToDamagerOnly")));
     DecimalFormat damageFormat = new DecimalFormat("0.##");
-    as.setCustomName(IndicatorColor + "-" + String.valueOf(damageFormat.format(event.getDamage())));
+    as.setCustomName(IndicatorColor + "-" + String.valueOf(damageFormat.format(event.getFinalDamage())));
+    // Bukkit.broadcastMessage(IndicatorColor + "-" +
+    // String.valueOf(damageFormat.format(event.getDamage())));
     as.setCustomNameVisible(true);
 
     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
