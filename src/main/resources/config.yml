@@ -1,0 +1,7 @@
+#The indicator color for normal hits
+HitColor: "7"
+#The indicator color for critical hits
+CriticalHitColor: "4"
+#Should the indicator be shown to everyone(true) or just the damager(false)
+#! DON"T RELOAD THE SERVER AFTER CHANGING THIS VALUE INSTEAD RESTART
+ShowToDamagerOnly: true
