@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.poxiton</groupId>
+  <groupId>com.github.MagicCheese1</groupId>
   <artifactId>DamageIndicator</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
   <name>DamageIndicator</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,26 +19,26 @@
       <id>papermc</id>
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
-      <repository>
-    <id>dmulloy2-repo</id>
-    <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
-  </repository>
+    <repository>
+      <id>dmulloy2-repo</id>
+      <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
+    </repository>
   </repositories>
- <dependencies>
-  <dependency>
-    <groupId>com.destroystokyo.paper</groupId>
-    <artifactId>paper-api</artifactId>
-    <version>1.15.2-R0.1-SNAPSHOT</version>
-    <scope>provided</scope>
-  </dependency>
-     <dependency>
-    <groupId>com.comphenix.protocol</groupId>
-    <artifactId>ProtocolLib</artifactId>
-    <version>4.5.0</version>
-  </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.destroystokyo.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.15.2-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.comphenix.protocol</groupId>
+      <artifactId>ProtocolLib</artifactId>
+      <version>4.5.0</version>
+    </dependency>
   </dependencies>
 
- <build>
+  <build>
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <resources>
       <resource>

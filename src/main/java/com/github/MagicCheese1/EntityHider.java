@@ -1,4 +1,4 @@
-package com.github.poxiton;
+package com.github.MagicCheese1;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
 
@@ -32,8 +32,9 @@ public class EntityHider implements Listener {
   // Packets that update remote player entities
   private static final PacketType[] ENTITY_PACKETS = { ENTITY_EQUIPMENT, BED, ANIMATION, NAMED_ENTITY_SPAWN, COLLECT,
       SPAWN_ENTITY, SPAWN_ENTITY_LIVING, SPAWN_ENTITY_PAINTING, SPAWN_ENTITY_EXPERIENCE_ORB, ENTITY_VELOCITY,
-      REL_ENTITY_MOVE, ENTITY_LOOK, REL_ENTITY_MOVE_LOOK, REL_ENTITY_MOVE_LOOK, ENTITY_TELEPORT, ENTITY_HEAD_ROTATION,
-      ENTITY_STATUS, ATTACH_ENTITY, ENTITY_METADATA, ENTITY_EFFECT, REMOVE_ENTITY_EFFECT, BLOCK_BREAK_ANIMATION
+      REL_ENTITY_MOVE, ENTITY_LOOK, ENTITY_MOVE_LOOK, ENTITY_MOVE_LOOK, ENTITY_TELEPORT, ENTITY_HEAD_ROTATION,
+      ENTITY_STATUS, ATTACH_ENTITY, ENTITY_METADATA, ENTITY_EFFECT, REMOVE_ENTITY_EFFECT, BLOCK_BREAK_ANIMATION,
+      UPDATE_ENTITY_NBT, COMBAT_EVENT
 
       // We don't handle DESTROY_ENTITY though
   };
@@ -210,11 +211,13 @@ public class EntityHider implements Listener {
     return new PacketAdapter(plugin, ENTITY_PACKETS) {
       @Override
       public void onPacketSending(PacketEvent event) {
-        int entityID = event.getPacket().getIntegers().read(0);
+        int index = event.getPacketType() == COMBAT_EVENT ? 1 : 0;
 
-        // See if this packet should be cancelled
-        if (!isVisible(event.getPlayer(), entityID)) {
-          event.setCancelled(true);
+        Integer entityID = event.getPacket().getIntegers().readSafely(index);
+        if (entityID != null) {
+          if (!isVisible(event.getPlayer(), entityID)) {
+            event.setCancelled(true);
+          }
         }
       }
     };

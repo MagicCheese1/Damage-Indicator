@@ -1,4 +1,4 @@
-package com.github.poxiton;
+package com.github.MagicCheese1;
 
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -72,8 +72,9 @@ public class DamageIndicatorListener implements Listener {
 
   boolean isCritical(Player damager) {
     return damager.getFallDistance() > 0.0F
-        && !damager.isOnGround() && !damager.getLocation().getBlock().isLiquid() && !damager.getActivePotionEffects()
-            .stream().filter(o -> o.getType().equals(PotionEffectType.BLINDNESS)).findFirst().isPresent()
+        // && !damager.isOnGround()
+        && !damager.getLocation().getBlock().isLiquid() && !damager.getActivePotionEffects().stream()
+            .filter(o -> o.getType().equals(PotionEffectType.BLINDNESS)).findFirst().isPresent()
         && damager.getVehicle() == null && !damager.isSprinting();
   }
 }

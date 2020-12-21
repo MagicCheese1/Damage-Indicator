@@ -1,6 +1,6 @@
-package com.github.poxiton;
+package com.github.MagicCheese1;
 
-import com.github.poxiton.EntityHider.Policy;
+import com.github.MagicCheese1.EntityHider.Policy;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;

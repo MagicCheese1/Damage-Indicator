@@ -1,4 +1,4 @@
-package com.github.poxiton;
+package com.github.MagicCheese1;
 
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
