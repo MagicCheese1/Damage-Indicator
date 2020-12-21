@@ -18,14 +18,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 public class DamageIndicatorListener implements Listener {
-  private JavaPlugin plugin;
-  private EntityHider entityHider;
-  FileConfiguration config;
+  private JavaPlugin Plugin;
+  private EntityHider EntityHider;
+  FileConfiguration Config;
 
   DamageIndicatorListener(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config) {
-    this.plugin = plugin;
-    this.entityHider = entityHider;
-    this.config = config;
+    this.Plugin = plugin;
+    this.EntityHider = entityHider;
+    this.Config = config;
   }
 
   @EventHandler
@@ -39,11 +39,13 @@ public class DamageIndicatorListener implements Listener {
     Player damager;
     Location spawnLocation;
     Random random = new Random();
-    ChatColor IndicatorColor = ChatColor.getByChar(config.getString("HitColor"));
+    ChatColor IndicatorColor = ChatColor.getByChar(Config.getString("HitColor"));
+
     do {
       spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
           random.nextDouble() * (1.0 + 1.0) - 1.0);
     } while (!spawnLocation.getBlock().isPassable());
+
     if (event.getDamager().getType() == EntityType.ARROW) {
       Arrow arrow = (Arrow) event.getDamager();
       if (!(arrow.getShooter() instanceof Player)) {
@@ -51,28 +53,25 @@ public class DamageIndicatorListener implements Listener {
       }
       damager = (Player) arrow.getShooter();
       if (arrow.isCritical())
-        IndicatorColor = ChatColor.getByChar(config.getString("CriticalHitColor"));
+        IndicatorColor = ChatColor.getByChar(Config.getString("CriticalHitColor"));
     } else {
       damager = (Player) event.getDamager();
       if (isCritical(damager))
-        IndicatorColor = ChatColor.getByChar(config.getString("CriticalHitColor"));
+        IndicatorColor = ChatColor.getByChar(Config.getString("CriticalHitColor"));
     }
     final ArmorStand as = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
-        new InvisibleArmorStand(plugin, damager, entityHider, config.getBoolean("ShowToDamagerOnly")));
-    DecimalFormat damageFormat = new DecimalFormat("0.##");
+        new InvisibleArmorStand(Plugin, damager, EntityHider, Config.getBoolean("ShowToDamagerOnly")));
+    DecimalFormat damageFormat = new DecimalFormat(Config.getString("IndicatorFormat"));
     as.setCustomName(IndicatorColor + "-" + String.valueOf(damageFormat.format(event.getFinalDamage())));
-    // Bukkit.broadcastMessage(IndicatorColor + "-" +
-    // String.valueOf(damageFormat.format(event.getDamage())));
     as.setCustomNameVisible(true);
 
-    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+    Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin, () -> {
       as.remove();
     }, 30);
   }
 
   boolean isCritical(Player damager) {
     return damager.getFallDistance() > 0.0F
-        // && !damager.isOnGround()
         && !damager.getLocation().getBlock().isLiquid() && !damager.getActivePotionEffects().stream()
             .filter(o -> o.getType().equals(PotionEffectType.BLINDNESS)).findFirst().isPresent()
         && damager.getVehicle() == null && !damager.isSprinting();
