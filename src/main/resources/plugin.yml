@@ -1,5 +1,6 @@
 main: com.github.MagicCheese1.Main
 name: DamageIndicator
+author: MagicCheese1
 version: 1.0
-api-version: 1.15
+api-version: 1.16
 depend: [ProtocolLib]
