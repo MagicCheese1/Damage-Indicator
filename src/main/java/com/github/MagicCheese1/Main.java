@@ -10,9 +10,13 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    // Save the default config from src/resources/config.yml
     this.saveDefaultConfig();
+    // Get current config
     FileConfiguration config = this.getConfig();
+
     entityHider = new EntityHider(this, Policy.BLACKLIST);
+
     getServer().getPluginManager().registerEvents(new DamageIndicatorListener(this, entityHider, config), this);
   }
 }
