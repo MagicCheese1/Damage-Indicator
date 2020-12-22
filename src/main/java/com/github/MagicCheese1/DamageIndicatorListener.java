@@ -47,7 +47,11 @@ public class DamageIndicatorListener implements Listener {
     do {
       spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
           random.nextDouble() * (1.0 + 1.0) - 1.0);
-    } while (!spawnLocation.getBlock().isPassable());
+    } while (!spawnLocation.getBlock().isEmpty() && !spawnLocation.getBlock().isLiquid()); // In previous versions of
+                                                                                           // this plugin I used
+                                                                                           // .isPassable() but that's
+                                                                                           // not compatible with older
+                                                                                           // versions of Minecraft.
 
     // Check if the damager is an arrow. If it is use arrow.isCritical().
     // If it isn't use the custom isCritical() for direct damage.
