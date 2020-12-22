@@ -34,7 +34,7 @@ ShowToDamagerOnly: true
 
 #The format for showing the damage (example: "0.0#")
 #https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
-IndicatorFormat: "0.#"
+IndicatorFormat: "0.#❤"
 ```
 
 ## Building
