@@ -47,11 +47,7 @@ public class DamageIndicatorListener implements Listener {
     do {
       spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
           random.nextDouble() * (1.0 + 1.0) - 1.0);
-<<<<<<< HEAD
     } while (!spawnLocation.getBlock().isEmpty() && !spawnLocation.getBlock().isLiquid()); // In previous versions of
-=======
-    } while (!spawnLocation.getBlock().isEmpty() || !spawnLocation.getBlock().isLiquid()); // In previous versions of
->>>>>>> 2149a0f2316c1b1931c8043f40875e8efde3a689
                                                                                            // this plugin I used
                                                                                            // .isPassable() but that's
                                                                                            // not compatible with older
