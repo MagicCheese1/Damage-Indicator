@@ -8,6 +8,6 @@ CriticalHitColor: "4"
 #! DON"T RELOAD THE SERVER AFTER CHANGING THIS VALUE INSTEAD RESTART
 ShowToDamagerOnly: true
 
-#The format for showing the damage (example: "0.0#")
+#The format for showing the damage (example: "0.0#❤")
 #https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
 IndicatorFormat: "0.#"
