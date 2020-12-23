@@ -3,7 +3,7 @@
 This is a plugin for Minecraft Paper servers. It adds an indicator for how much damage you dealt to an entity.
 ![](/images/dmgindicatorscreen.png)
 
-## dependencies
+## Dependencies
 
 - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
