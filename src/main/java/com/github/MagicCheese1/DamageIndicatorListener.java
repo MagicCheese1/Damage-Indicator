@@ -40,9 +40,10 @@ public class DamageIndicatorListener implements Listener {
     Player damager;
     Location spawnLocation;
     Random random = new Random();
-    ChatColor IndicatorColor = ChatColor.getByChar(Config.getString("HitColor"));
+    DecimalFormat damageFormat = new DecimalFormat(
+        ChatColor.translateAlternateColorCodes('&', Config.getString("IndicatorFormat")));
 
-    // ! Very unsafe! Very don't Care! :P
+    // ! Very unsafe! Very don't Care! 😛
     // Tries random positions until it finds one that is not inside a block
     do {
       spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
@@ -66,22 +67,21 @@ public class DamageIndicatorListener implements Listener {
       damager = (Player) arrow.getShooter();
 
       if (arrow.isCritical())
-        IndicatorColor = ChatColor.getByChar(Config.getString("CriticalHitColor"));
+        damageFormat = new DecimalFormat(
+            ChatColor.translateAlternateColorCodes('&', Config.getString("CriticalIndicatorFormat")));
     } else {
       damager = (Player) event.getDamager();
       if (Utility.isCritical(damager))
-        IndicatorColor = ChatColor.getByChar(Config.getString("CriticalHitColor"));
+        damageFormat = new DecimalFormat(
+            ChatColor.translateAlternateColorCodes('&', Config.getString("CriticalIndicatorFormat")));
     }
 
     // Spawn an invisible armor stand
     final ArmorStand armorStand = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
         new InvisibleArmorStand(Plugin, damager, EntityHider, Config.getBoolean("ShowToDamagerOnly")));
 
-    // Set formating
-    DecimalFormat damageFormat = new DecimalFormat(Config.getString("IndicatorFormat"));
-
     // Set visible name
-    armorStand.setCustomName(IndicatorColor + "-" + String.valueOf(damageFormat.format(event.getFinalDamage())));
+    armorStand.setCustomName(String.valueOf(damageFormat.format(event.getFinalDamage())));
     armorStand.setCustomNameVisible(true);
 
     // Destroy the armor stand after 3 sec

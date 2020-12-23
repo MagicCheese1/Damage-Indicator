@@ -22,19 +22,14 @@ This is a plugin for Minecraft Paper servers. It adds an indicator for how much 
 You can find the config file at \plugins\DamageIndicator\config.yml. By default it should look like this:
 
 ```yaml
-#The indicator color for normal hits
-HitColor: "7"
-
-#The indicator color for critical hits
-CriticalHitColor: "4"
-
 #Should the indicator be shown to everyone(true) or just the damager(false)
 #! DON"T RELOAD THE SERVER AFTER CHANGING THIS VALUE INSTEAD RESTART
 ShowToDamagerOnly: true
 
-#The format for showing the damage (example: "0.0#")
+#The format for showing the damage (example: "&7-0.0#&4❤")
 #https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
-IndicatorFormat: "0.#❤"
+IndicatorFormat: "&7-0.#&4❤"
+CriticalIndicatorFormat: "&c-0.#&4❤"
 ```
 
 ## Building
