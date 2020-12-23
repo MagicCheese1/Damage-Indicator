@@ -1,4 +1,4 @@
-package com.github.MagicCheese1;
+package com.github.magiccheese1.damageindicator;
 
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;

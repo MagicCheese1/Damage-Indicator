@@ -1,6 +1,6 @@
-package com.github.MagicCheese1;
+package com.github.magiccheese1.damageindicator;
 
-import com.github.MagicCheese1.EntityHider.Policy;
+import com.github.magiccheese1.damageindicator.EntityHider.Policy;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;

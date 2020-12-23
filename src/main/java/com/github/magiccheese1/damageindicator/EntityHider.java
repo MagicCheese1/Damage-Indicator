@@ -1,6 +1,6 @@
 // Thanks to Dan Mulloy for writing this EntityHider class 
 // source: https://gist.github.com/dmulloy2/5526f5bf906c064c255e
-package com.github.MagicCheese1;
+package com.github.magiccheese1.damageindicator;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
 
