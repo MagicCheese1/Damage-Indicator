@@ -29,6 +29,8 @@ public class DamageIndicatorListener implements Listener {
 
   @EventHandler
   public void entityDamageByEntity(EntityDamageByEntityEvent event) {
+    if (event.isCancelled())
+      return;
     // Don't show indicator if the damagee is an armor stand
     if (event.getEntity().getType() == EntityType.ARMOR_STAND)
       return;
