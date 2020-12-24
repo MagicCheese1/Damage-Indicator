@@ -11,7 +11,7 @@ public class Utility {
    * @param damager - The damaging player
    */
   static boolean isCritical(Player damager) {
-    return damager.getFallDistance() > 0.0F
+    return damager.getAttackCooldown() == 1F && damager.getFallDistance() > 0.0F
         && !damager.getLocation().getBlock().isLiquid() && !damager.getActivePotionEffects().stream()
             .filter(o -> o.getType().equals(PotionEffectType.BLINDNESS)).findFirst().isPresent()
         && damager.getVehicle() == null && !damager.isSprinting();
