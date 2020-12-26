@@ -1,6 +1,8 @@
 package com.github.magiccheese1.damageindicator;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -17,14 +19,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DamageIndicatorListener implements Listener {
-  private JavaPlugin Plugin;
-  private EntityHider EntityHider;
-  FileConfiguration Config;
+  private JavaPlugin plugin;
+  private EntityHider entityHider;
+  FileConfiguration config;
+  List<ArmorStand> toBeRemovedArmorstands;
 
-  DamageIndicatorListener(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config) {
-    this.Plugin = plugin;
-    this.EntityHider = entityHider;
-    this.Config = config;
+  DamageIndicatorListener(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config,
+      List<ArmorStand> toBeRemovedArmorstands) {
+    this.plugin = plugin;
+    this.entityHider = entityHider;
+    this.config = config;
+    this.toBeRemovedArmorstands = toBeRemovedArmorstands;
   }
 
   @EventHandler
@@ -43,7 +48,7 @@ public class DamageIndicatorListener implements Listener {
     Location spawnLocation;
     Random random = new Random();
     DecimalFormat damageFormat = new DecimalFormat(
-        ChatColor.translateAlternateColorCodes('&', Config.getString("IndicatorFormat")));
+        ChatColor.translateAlternateColorCodes('&', config.getString("IndicatorFormat")));
 
     // ! Very unsafe! Very don't Care! 😛
     // Tries random positions until it finds one that is not inside a block
@@ -70,25 +75,27 @@ public class DamageIndicatorListener implements Listener {
 
       if (arrow.isCritical())
         damageFormat = new DecimalFormat(
-            ChatColor.translateAlternateColorCodes('&', Config.getString("CriticalIndicatorFormat")));
+            ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
     } else {
       damager = (Player) event.getDamager();
       if (Utility.isCritical(damager))
         damageFormat = new DecimalFormat(
-            ChatColor.translateAlternateColorCodes('&', Config.getString("CriticalIndicatorFormat")));
+            ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
     }
 
     // Spawn an invisible armor stand
     final ArmorStand armorStand = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
-        new InvisibleArmorStand(Plugin, damager, EntityHider, Config.getBoolean("ShowToDamagerOnly")));
+        new InvisibleArmorStand(plugin, damager, entityHider, config.getBoolean("ShowToDamagerOnly")));
 
     // Set visible name
     armorStand.setCustomName(String.valueOf(damageFormat.format(event.getFinalDamage())));
     armorStand.setCustomNameVisible(true);
 
     // Destroy the armor stand after 3 sec
-    Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin, () -> {
+    toBeRemovedArmorstands.add(armorStand);
+    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
       armorStand.remove();
+      toBeRemovedArmorstands.remove(armorStand);
     }, 30);
   }
 }
