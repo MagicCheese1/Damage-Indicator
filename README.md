@@ -1,4 +1,4 @@
-# Damage indicator
+# Damage Indicator
 
 This is a plugin for Minecraft Paper servers. It adds an indicator for how much damage you dealt to an entity.
 ![](/images/dmgindicatorscreen.png)
