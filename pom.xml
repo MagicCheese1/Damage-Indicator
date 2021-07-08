@@ -5,7 +5,7 @@
 
   <groupId>com.github.magiccheese1.damageindicator</groupId>
   <artifactId>DamageIndicator</artifactId>
-  <version>1.1.5</version>
+  <version>1.1.6</version>
   <packaging>jar</packaging>
   <name>DamageIndicator</name>
 
@@ -42,11 +42,8 @@
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <resources>
       <resource>
-        <directory>${project.basedir}/src/main/resources</directory>
-        <includes>
-          <include>plugin.yml</include>
-          <include>config.yml</include>
-        </includes>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
       </resource>
     </resources>
   </build>

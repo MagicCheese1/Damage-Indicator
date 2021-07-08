@@ -84,6 +84,8 @@ public class DamageIndicatorListener implements Listener {
         damageFormat = new DecimalFormat(
             ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
     } else {
+      if (!(event.getDamager() instanceof Player))
+        return;
       damager = (Player) event.getDamager();
       if (Utility.isCritical(damager))
         damageFormat = new DecimalFormat(
@@ -91,7 +93,7 @@ public class DamageIndicatorListener implements Listener {
     }
 
     // Spawn an invisible armor stand
-    final ArmorStand armorStand = (ArmorStand) spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
+    final ArmorStand armorStand = spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
         new InvisibleArmorStand(plugin, damager, entityHider, config.getBoolean("ShowToDamagerOnly")));
 
     // Set visible name
