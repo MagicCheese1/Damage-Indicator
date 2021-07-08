@@ -1,7 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -9,10 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -37,11 +38,11 @@ public class DamageIndicatorListener implements Listener {
     if (event.isCancelled())
       return;
     // Don't show indicator if the damagee is an armor stand
-    if (event.getEntity().getType() == EntityType.ARMOR_STAND)
+    if (event.getEntity() instanceof ArmorStand)
       return;
 
     // Only show indicator if the damager was a player or an arrow
-    if (!(event.getDamager().getType() == EntityType.PLAYER || event.getDamager().getType() == EntityType.ARROW))
+    if (!(event.getDamager() instanceof Player || event.getDamager() instanceof Projectile))
       return;
 
     Player damager;
@@ -69,8 +70,8 @@ public class DamageIndicatorListener implements Listener {
 
     // Check if the damager is an arrow. If it is use arrow.isCritical().
     // If it isn't use the custom isCritical() for direct damage.
-    if (event.getDamager().getType() == EntityType.ARROW) {
-      Arrow arrow = (Arrow) event.getDamager();
+    if (event.getDamager() instanceof AbstractArrow) {
+      AbstractArrow arrow = (AbstractArrow) event.getDamager();
 
       // Don't show indicator if the arrow doesn't belong to a player
       if (!(arrow.getShooter() instanceof Player)) {
