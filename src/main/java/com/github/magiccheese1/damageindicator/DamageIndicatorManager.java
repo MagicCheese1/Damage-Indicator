@@ -32,14 +32,12 @@ import net.minecraft.world.entity.decoration.EntityArmorStand;
 
 public class DamageIndicatorManager implements Listener {
   private JavaPlugin plugin;
-  private EntityHider entityHider;
   FileConfiguration config;
   List<ArmorStand> toBeRemovedArmorstands;
 
-  DamageIndicatorManager(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config,
+  DamageIndicatorManager(JavaPlugin plugin, FileConfiguration config,
       List<ArmorStand> toBeRemovedArmorstands) {
     this.plugin = plugin;
-    this.entityHider = entityHider;
     this.config = config;
     this.toBeRemovedArmorstands = toBeRemovedArmorstands;
   }
