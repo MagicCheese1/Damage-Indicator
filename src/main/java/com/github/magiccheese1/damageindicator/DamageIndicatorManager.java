@@ -12,34 +12,28 @@ import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import net.kyori.adventure.text.Component;
 import net.minecraft.network.chat.ChatMessage;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 
 public class DamageIndicatorManager implements Listener {
-  private JavaPlugin plugin;
   FileConfiguration config;
-  List<ArmorStand> toBeRemovedArmorstands;
+  private JavaPlugin plugin;
 
-  DamageIndicatorManager(JavaPlugin plugin, FileConfiguration config,
-      List<ArmorStand> toBeRemovedArmorstands) {
-    this.plugin = plugin;
+  DamageIndicatorManager(JavaPlugin plugin, FileConfiguration config) {
     this.config = config;
-    this.toBeRemovedArmorstands = toBeRemovedArmorstands;
+    this.plugin = plugin;
   }
 
   @EventHandler
@@ -109,19 +103,27 @@ public class DamageIndicatorManager implements Listener {
 
     // Setup the armorstand and its metadata
     WorldServer worldServer = ((CraftWorld) spawnLocation.getWorld()).getHandle();
-    EntityArmorStand armorStand = new EntityArmorStand(worldServer, spawnLocation.getX(), spawnLocation.getY(),
+    EntityArmorStand armorstand = new EntityArmorStand(worldServer, spawnLocation.getX(), spawnLocation.getY(),
         spawnLocation.getZ());
-    armorStand.setMarker(true);
-    armorStand.setInvisible(true);
-    armorStand.setCustomName(new ChatMessage(String.valueOf(damageFormat.format(event.getFinalDamage()))));
-    armorStand.setCustomNameVisible(true);
+    armorstand.setMarker(true);
+    armorstand.setInvisible(true);
+    armorstand.setCustomName(new ChatMessage(String.valueOf(damageFormat.format(event.getFinalDamage()))));
+    armorstand.setCustomNameVisible(true);
     // Create entity spawn packet
-    var packet = new PacketPlayOutSpawnEntityLiving(armorStand);
+    var packet = new PacketPlayOutSpawnEntityLiving(armorstand);
     // Create entity Metadata packet
-    var packet2 = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
+    var packet2 = new PacketPlayOutEntityMetadata(armorstand.getId(), armorstand.getDataWatcher(), true);
     // Send the packets to the player
     ((CraftPlayer) damager).getHandle().b.sendPacket(packet);
     ((CraftPlayer) damager).getHandle().b.sendPacket(packet2);
 
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(armorstand.getId());
+        ((CraftPlayer) damager).getHandle().b.sendPacket(destroy);
+      }
+    }.runTaskLater(plugin, 30L);
   }
+
 }
