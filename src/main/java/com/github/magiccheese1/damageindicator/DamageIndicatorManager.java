@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -19,13 +21,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class DamageIndicatorListener implements Listener {
+import net.kyori.adventure.text.Component;
+import net.minecraft.network.chat.ChatMessage;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.decoration.EntityArmorStand;
+
+public class DamageIndicatorManager implements Listener {
   private JavaPlugin plugin;
   private EntityHider entityHider;
   FileConfiguration config;
   List<ArmorStand> toBeRemovedArmorstands;
 
-  DamageIndicatorListener(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config,
+  DamageIndicatorManager(JavaPlugin plugin, EntityHider entityHider, FileConfiguration config,
       List<ArmorStand> toBeRemovedArmorstands) {
     this.plugin = plugin;
     this.entityHider = entityHider;
@@ -91,20 +102,28 @@ public class DamageIndicatorListener implements Listener {
         damageFormat = new DecimalFormat(
             ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
     }
+    // // Destroy the armor stand after 3 sec
+    // toBeRemovedArmorstands.add(armorStand);
+    // Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+    // armorStand.remove();
+    // toBeRemovedArmorstands.remove(armorStand);
+    // }, 30);
 
-    // Spawn an invisible armor stand
-    final ArmorStand armorStand = spawnLocation.getWorld().spawn(spawnLocation, ArmorStand.class,
-        new InvisibleArmorStand(plugin, damager, entityHider, config.getBoolean("ShowToDamagerOnly")));
-
-    // Set visible name
-    armorStand.setCustomName(String.valueOf(damageFormat.format(event.getFinalDamage())));
+    // Setup the armorstand and its metadata
+    WorldServer worldServer = ((CraftWorld) spawnLocation.getWorld()).getHandle();
+    EntityArmorStand armorStand = new EntityArmorStand(worldServer, spawnLocation.getX(), spawnLocation.getY(),
+        spawnLocation.getZ());
+    armorStand.setMarker(true);
+    armorStand.setInvisible(true);
+    armorStand.setCustomName(new ChatMessage(String.valueOf(damageFormat.format(event.getFinalDamage()))));
     armorStand.setCustomNameVisible(true);
+    // Create entity spawn packet
+    var packet = new PacketPlayOutSpawnEntityLiving(armorStand);
+    // Create entity Metadata packet
+    var packet2 = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
+    // Send the packets to the player
+    ((CraftPlayer) damager).getHandle().b.sendPacket(packet);
+    ((CraftPlayer) damager).getHandle().b.sendPacket(packet2);
 
-    // Destroy the armor stand after 3 sec
-    toBeRemovedArmorstands.add(armorStand);
-    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-      armorStand.remove();
-      toBeRemovedArmorstands.remove(armorStand);
-    }, 30);
   }
 }

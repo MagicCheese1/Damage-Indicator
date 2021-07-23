@@ -25,7 +25,7 @@ public class Main extends JavaPlugin {
     toBeRemovedArmorstands = new ArrayList<>();
 
     getServer().getPluginManager()
-        .registerEvents(new DamageIndicatorListener(this, entityHider, config, toBeRemovedArmorstands), this);
+        .registerEvents(new DamageIndicatorManager(this, entityHider, config, toBeRemovedArmorstands), this);
   }
 
   @Override
