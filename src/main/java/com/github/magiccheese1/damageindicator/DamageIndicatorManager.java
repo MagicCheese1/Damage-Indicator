@@ -1,10 +1,8 @@
 package com.github.magiccheese1.damageindicator;
 
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
