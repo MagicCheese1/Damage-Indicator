@@ -1,21 +1,15 @@
 # Damage Indicator
 
-This is a plugin for Minecraft Paper servers. It adds an indicator for how much damage you dealt to an entity.
+This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds an indicators for how much damage you dealt to an entity.
 ![](/images/dmgindicatorscreen.png)
-
-## Dependencies
-
-- [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
 ## Installing
 
 1. Download the newest release from the [releases page](https://github.com/MagicCheese1/Damage-Indicator/releases)
 
-2. Download the dependencies
+2. Put the downloaded jar in your plugins folder
 
-3. Put everything in your plugins folder
-
-4. Enjoy
+3. Enjoy
 
 ## Configuration
 
@@ -23,7 +17,6 @@ You can find the config file at \plugins\DamageIndicator\config.yml. By default 
 
 ```yaml
 #Should the indicator be shown to everyone(true) or just the damager(false)
-#! DON"T RELOAD THE SERVER AFTER CHANGING THIS VALUE INSTEAD RESTART
 ShowToDamagerOnly: true
 
 #The format for showing the damage (example: "&7-0.0#&4❤")
@@ -36,7 +29,7 @@ CriticalIndicatorFormat: "&c-0.#&4❤"
 
 1. Make sure you have [Maven](https://maven.apache.org/) installed
 2. Clone this repo
-3. open a terminal and type `mvn install`
+3. open a terminal and type `mvn package`
 4. The jar file is in the /target/ folder
 
 ## License
