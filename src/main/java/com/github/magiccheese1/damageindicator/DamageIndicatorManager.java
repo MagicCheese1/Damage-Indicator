@@ -1,6 +1,8 @@
 package com.github.magiccheese1.damageindicator;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
@@ -10,6 +12,7 @@ import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -92,13 +95,15 @@ public class DamageIndicatorManager implements Listener {
         damageFormat = new DecimalFormat(
             ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
     }
-    // // Destroy the armor stand after 3 sec
-    // toBeRemovedArmorstands.add(armorStand);
-    // Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-    // armorStand.remove();
-    // toBeRemovedArmorstands.remove(armorStand);
-    // }, 30);
-
+    // figure out who should see the indicator
+    List<Player> packetRecipients = new ArrayList<Player>();
+    packetRecipients.add(damager);
+    if (!config.getBoolean("ShowToDamagerOnly")) {
+      for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
+        if (nearbyEntity instanceof Player nearbyPlayer)
+          packetRecipients.add(nearbyPlayer);
+      }
+    }
     // Setup the armorstand and its metadata
     WorldServer worldServer = ((CraftWorld) spawnLocation.getWorld()).getHandle();
     EntityArmorStand armorstand = new EntityArmorStand(worldServer, spawnLocation.getX(), spawnLocation.getY(),
@@ -111,17 +116,21 @@ public class DamageIndicatorManager implements Listener {
     var packet = new PacketPlayOutSpawnEntityLiving(armorstand);
     // Create entity Metadata packet
     var packet2 = new PacketPlayOutEntityMetadata(armorstand.getId(), armorstand.getDataWatcher(), true);
-    // Send the packets to the player
-    ((CraftPlayer) damager).getHandle().b.sendPacket(packet);
-    ((CraftPlayer) damager).getHandle().b.sendPacket(packet2);
-
+    // Send the packets to the player(s)
+    for (Player player : packetRecipients) {
+      ((CraftPlayer) player).getHandle().b.sendPacket(packet);
+      ((CraftPlayer) player).getHandle().b.sendPacket(packet2);
+    }
+    // Remove the indicator after 30 ticks
     new BukkitRunnable() {
       @Override
       public void run() {
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(armorstand.getId());
-        ((CraftPlayer) damager).getHandle().b.sendPacket(destroy);
+        for (Player player : packetRecipients) {
+          ((CraftPlayer) player).getHandle().b.sendPacket(destroy);
+          ((CraftPlayer) player).getHandle().b.sendPacket(destroy);
+        }
       }
     }.runTaskLater(plugin, 30L);
   }
-
 }

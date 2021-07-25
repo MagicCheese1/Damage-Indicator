@@ -1,5 +1,4 @@
 #Should the indicator be shown to everyone(true) or just the damager(false)
-#! DON"T RELOAD THE SERVER AFTER CHANGING THIS VALUE INSTEAD RESTART
 ShowToDamagerOnly: true
 
 #The format for showing the damage (example: "&7-0.0#&4❤")
