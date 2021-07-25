@@ -13,6 +13,19 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.16
+      - name: Install jq tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+
+      - name: Download paperclip
+        run: |
+          PAPER_VERSION="1.17.1"
+          PAPER_BUILD="$(curl -sLlf "https://papermc.io/api/v2/projects/paper/versions/${PAPER_VERSION}" | jq '.builds[-1]')"
+          wget "https://papermc.io/api/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" -O paperclip.jar
+
+      - name: Patch paper
+        run: java -Dpaperclip.install=true -jar paperclip.jar
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml -Djar.finalName=DamageIndicator

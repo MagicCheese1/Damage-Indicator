@@ -20,12 +20,6 @@
       <artifactId>paper</artifactId>
       <version>1.17.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>io.papermc</groupId>
-          <artifactId>minecraft-server</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
   <build>
