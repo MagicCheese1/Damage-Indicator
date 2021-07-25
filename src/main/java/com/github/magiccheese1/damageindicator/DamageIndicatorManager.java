@@ -26,6 +26,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 
 public class DamageIndicatorManager implements Listener {
@@ -113,22 +114,22 @@ public class DamageIndicatorManager implements Listener {
     armorstand.setCustomName(new ChatMessage(String.valueOf(damageFormat.format(event.getFinalDamage()))));
     armorstand.setCustomNameVisible(true);
     // Create entity spawn packet
-    var packet = new PacketPlayOutSpawnEntityLiving(armorstand);
+    var entitySpawnPacket = new PacketPlayOutSpawnEntityLiving(armorstand);
     // Create entity Metadata packet
-    var packet2 = new PacketPlayOutEntityMetadata(armorstand.getId(), armorstand.getDataWatcher(), true);
+    var entityMetadataPacket = new PacketPlayOutEntityMetadata(armorstand.getId(), armorstand.getDataWatcher(), true);
     // Send the packets to the player(s)
     for (Player player : packetRecipients) {
-      ((CraftPlayer) player).getHandle().b.sendPacket(packet);
-      ((CraftPlayer) player).getHandle().b.sendPacket(packet2);
+      PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
+      playerConnection.sendPacket(entitySpawnPacket);
+      playerConnection.sendPacket(entityMetadataPacket);
     }
     // Remove the indicator after 30 ticks
     new BukkitRunnable() {
       @Override
       public void run() {
-        PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(armorstand.getId());
+        PacketPlayOutEntityDestroy entityDestroyPacket = new PacketPlayOutEntityDestroy(armorstand.getId());
         for (Player player : packetRecipients) {
-          ((CraftPlayer) player).getHandle().b.sendPacket(destroy);
-          ((CraftPlayer) player).getHandle().b.sendPacket(destroy);
+          ((CraftPlayer) player).getHandle().b.sendPacket(entityDestroyPacket);
         }
       }
     }.runTaskLater(plugin, 30L);
