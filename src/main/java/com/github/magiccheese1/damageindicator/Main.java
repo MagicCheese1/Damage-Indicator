@@ -1,17 +1,16 @@
 package com.github.magiccheese1.damageindicator;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.github.magiccheese1.damageindicator.versions.PacketManager;
+import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
+import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
 
-import com.github.magiccheese1.damageindicator.EntityHider.Policy;
-
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-  private EntityHider entityHider;
-  private List<ArmorStand> toBeRemovedArmorstands;
+
+  public static String serverVersion;
 
   @Override
   public void onEnable() {
@@ -20,18 +19,17 @@ public class Main extends JavaPlugin {
     // Get current config
     FileConfiguration config = this.getConfig();
 
-    entityHider = new EntityHider(this, Policy.BLACKLIST);
-
-    toBeRemovedArmorstands = new ArrayList<>();
-
-    getServer().getPluginManager()
-        .registerEvents(new DamageIndicatorListener(this, entityHider, config, toBeRemovedArmorstands), this);
-  }
-
-  @Override
-  public void onDisable() {
-    for (ArmorStand armorStand : toBeRemovedArmorstands) {
-      armorStand.remove();
+    // Get current minecraft version
+    serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
+    PacketManager packetManager = null;
+    switch (serverVersion) {
+      case "1_16_R3":
+        packetManager = new PacketManager1_16_R3();
+        break;
+      default:
+        packetManager = new PacketManager1_17_R1();
     }
+    getServer().getPluginManager().registerEvents(new BukkitEventListener(this, config, packetManager), this);
   }
+
 }
