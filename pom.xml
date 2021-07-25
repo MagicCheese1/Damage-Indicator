@@ -19,10 +19,6 @@
       <id>papermc</id>
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
-    <repository>
-      <id>dmulloy2-repo</id>
-      <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
-    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -36,11 +32,6 @@
           <artifactId>minecraft-server</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib</artifactId>
-      <version>4.5.0</version>
     </dependency>
   </dependencies>
 
