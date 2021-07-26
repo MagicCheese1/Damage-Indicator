@@ -120,8 +120,8 @@ public class BukkitEventListener implements Listener {
     packetRecipients.add(damager);
     if (!config.getBoolean("ShowToDamagerOnly")) {
       for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
-        if (nearbyEntity instanceof Player nearbyPlayer)
-          packetRecipients.add(nearbyPlayer);
+        if (nearbyEntity instanceof Player)
+          packetRecipients.add((Player) nearbyEntity);
       }
     }
     Object indicatorEntity = packetManager.BuildEntityArmorStand(spawnLocation,

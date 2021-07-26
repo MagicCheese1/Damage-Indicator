@@ -1,9 +1,7 @@
 package com.github.magiccheese1.damageindicator.versions;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -20,10 +18,6 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 
 public class PacketManager1_17_R1 implements PacketManager {
-    private static Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        return Class.forName(
-                "net.minecraft.server." + Bukkit.getServer().getClass().getName().split("\\.")[3] + "." + className);
-    }
 
     public Object buildEntitySpawnPacket(Object entity) {
         return new PacketPlayOutSpawnEntityLiving((EntityLiving) entity);
