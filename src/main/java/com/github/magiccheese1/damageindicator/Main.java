@@ -23,7 +23,7 @@ public class Main extends JavaPlugin {
     serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
     PacketManager packetManager = null;
     switch (serverVersion) {
-      case "1_16_R3":
+      case "v1_16_R3":
         packetManager = new PacketManager1_16_R3();
         break;
       default:
