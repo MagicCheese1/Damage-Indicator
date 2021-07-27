@@ -20,7 +20,7 @@ jobs:
 
       - name: Download paperclip
         run: |
-          PAPER_VERSION="1.16.5"
+          PAPER_VERSION="1.17.1"
           PAPER_BUILD="$(curl -sLlf "https://papermc.io/api/v2/projects/paper/versions/${PAPER_VERSION}" | jq '.builds[-1]')"
           wget "https://papermc.io/api/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" -O paperclip.jar
 
