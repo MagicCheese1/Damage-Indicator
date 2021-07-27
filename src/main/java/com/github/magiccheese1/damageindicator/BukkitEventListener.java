@@ -116,6 +116,7 @@ public class BukkitEventListener implements Listener {
       }
     }
     // figure out who should see the indicator
+    
     List<Player> packetRecipients = new ArrayList<Player>();
     packetRecipients.add(damager);
     if (!config.getBoolean("ShowToDamagerOnly")) {
