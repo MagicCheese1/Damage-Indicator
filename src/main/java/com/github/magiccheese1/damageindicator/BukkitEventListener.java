@@ -133,6 +133,6 @@ public class BukkitEventListener implements Listener {
                     packetManager.sendPacket(entityDestroyPacket, recipient);
                 }
             }
-        }.runTaskLater(plugin, 30L);
+        }.runTaskLaterAsynchronously(plugin, 30L);
     }
 }
