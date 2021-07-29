@@ -1,11 +1,5 @@
 package com.github.magiccheese1.damageindicator.versions;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
@@ -16,6 +10,11 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class PacketManager1_17_R1 implements PacketManager {
 
@@ -50,7 +49,7 @@ public class PacketManager1_17_R1 implements PacketManager {
         try {
             World world = location.getWorld();
             WorldServer WorldServer = (WorldServer) world.getClass().getMethod("getHandle").invoke(world);
-            Object entityArmorStand = new EntityArmorStand((net.minecraft.world.level.World) WorldServer,
+            Object entityArmorStand = new EntityArmorStand(WorldServer,
                     location.getX(), location.getY(), location.getZ());
             entityArmorStand.getClass().getMethod("setMarker", boolean.class).invoke(entityArmorStand, true);
             entityArmorStand.getClass().getMethod("setInvisible", boolean.class).invoke(entityArmorStand, true);

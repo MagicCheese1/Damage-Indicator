@@ -3,36 +3,35 @@ package com.github.magiccheese1.damageindicator;
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-  public static String serverVersion;
+    public static String serverVersion;
 
-  @Override
-  public void onEnable() {
-    // Save the default config from src/resources/config.yml
-    this.saveDefaultConfig();
-    // Get current config
-    FileConfiguration config = this.getConfig();
+    @Override
+    public void onEnable() {
+        // Save the default config from src/resources/config.yml
+        this.saveDefaultConfig();
+        // Get current config
+        FileConfiguration config = this.getConfig();
 
-    // Get current minecraft version
-    serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
-    PacketManager packetManager = null;
-    getLogger().info(serverVersion);
-    switch (serverVersion) {
-      case "v1_15_R1":
-      case "v1_16_R3":
-        packetManager = new PacketManager1_16_R3();
-        break;
-      default:
-        packetManager = new PacketManager1_17_R1();
-        break;
+        // Get current minecraft version
+        serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
+        PacketManager packetManager;
+        getLogger().info(serverVersion);
+        switch (serverVersion) {
+            case "v1_15_R1":
+            case "v1_16_R3":
+                packetManager = new PacketManager1_16_R3();
+                break;
+            default:
+                packetManager = new PacketManager1_17_R1();
+                break;
+        }
+        getServer().getPluginManager().registerEvents(new BukkitEventListener(this, config, packetManager), this);
     }
-    getServer().getPluginManager().registerEvents(new BukkitEventListener(this, config, packetManager), this);
-  }
 
 }

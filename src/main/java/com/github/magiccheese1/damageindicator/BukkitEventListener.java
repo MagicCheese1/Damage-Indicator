@@ -14,12 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class BukkitEventListener implements Listener {
-    FileConfiguration config;
-    private JavaPlugin plugin;
-    private PacketManager packetManager;
+    final private FileConfiguration config;
+    final private JavaPlugin plugin;
+    final private PacketManager packetManager;
 
     BukkitEventListener(JavaPlugin plugin, FileConfiguration config, PacketManager packetManager) {
         this.config = config;
@@ -43,7 +44,7 @@ public class BukkitEventListener implements Listener {
         Location spawnLocation;
         Random random = new Random();
         DecimalFormat damageFormat = new DecimalFormat(
-                ChatColor.translateAlternateColorCodes('&', config.getString("IndicatorFormat")));
+                ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("IndicatorFormat"))));
 
         // Tries random positions until it finds one that is not inside a block
         int tries = 0;
@@ -76,18 +77,18 @@ public class BukkitEventListener implements Listener {
 
             if (arrow.isCritical())
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("CriticalIndicatorFormat"))));
         } else {
             if (!(event.getDamager() instanceof Player))
                 return;
             damager = (Player) event.getDamager();
             if (Utility.isCritical(damager))
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', config.getString("CriticalIndicatorFormat")));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("CriticalIndicatorFormat"))));
 
 
             // figure out who should see the indicator
-            List<Player> packetRecipients = new ArrayList<Player>();
+            List<Player> packetRecipients = new ArrayList<>();
             packetRecipients.add(damager);
             if (!config.getBoolean("ShowToDamagerOnly")) {
                 for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
