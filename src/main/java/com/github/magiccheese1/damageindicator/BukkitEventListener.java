@@ -100,12 +100,12 @@ public class BukkitEventListener implements Listener {
             DecimalFormat finalDamageFormat = damageFormat;
 
             //ASYNC!?!?!?!
-            Thread t = new Thread(() -> createIndicator(damager, finalSpawnLocation, finalDamageFormat, event.getFinalDamage(), packetRecipients));
+            Thread t = new Thread(() -> createIndicator(finalSpawnLocation, finalDamageFormat, event.getFinalDamage(), packetRecipients));
             t.start();
         }
     }
 
-    private void createIndicator(Player damager, Location location, DecimalFormat nameFormat, double damage, List<Player> packetRecipients) {
+    private void createIndicator(Location location, DecimalFormat nameFormat, double damage, List<Player> packetRecipients) {
 
         //Create the entity
         Object indicatorEntity = packetManager.BuildEntityArmorStand(location,
@@ -116,8 +116,10 @@ public class BukkitEventListener implements Listener {
         Object entityMetadataPacket = packetManager.buildEntityMetadataPacket(indicatorEntity, true);
 
         //Send the packets
-        packetManager.sendPacket(entitySpawnPacket, damager);
-        packetManager.sendPacket(entityMetadataPacket, damager);
+        for (Player recipient : packetRecipients) {
+            packetManager.sendPacket(entitySpawnPacket, recipient);
+            packetManager.sendPacket(entityMetadataPacket, recipient);
+        }
 
         //Destroy the entity after 30 ticks
         new BukkitRunnable() {
