@@ -22,14 +22,10 @@ public class Main extends JavaPlugin {
         serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
         getLogger().info(serverVersion);
-        switch (serverVersion) {
-            case "v1_15_R1":
-            case "v1_16_R3":
-                packetManager = new PacketManager1_16_R3();
-                break;
-            default:
-                packetManager = new PacketManager1_17_R1();
-                break;
+        if (serverVersion.equals("v1_16_R3")) {
+            packetManager = new PacketManager1_16_R3();
+        } else {
+            packetManager = new PacketManager1_17_R1();
         }
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this, config, packetManager), this);
     }

@@ -85,25 +85,25 @@ public class BukkitEventListener implements Listener {
             if (Utility.isCritical(damager))
                 damageFormat = new DecimalFormat(
                         ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("CriticalIndicatorFormat"))));
-
-
-            // figure out who should see the indicator
-            List<Player> packetRecipients = new ArrayList<>();
-            packetRecipients.add(damager);
-            if (!config.getBoolean("ShowToDamagerOnly")) {
-                for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
-                    if (nearbyEntity instanceof Player)
-                        packetRecipients.add((Player) nearbyEntity);
-                }
-            }
-
-            Location finalSpawnLocation = spawnLocation;
-            DecimalFormat finalDamageFormat = damageFormat;
-
-            //ASYNC!?!?!?!
-            Thread t = new Thread(() -> createIndicator(finalSpawnLocation, finalDamageFormat, event.getFinalDamage(), packetRecipients));
-            t.start();
         }
+
+        // figure out who should see the indicator
+        List<Player> packetRecipients = new ArrayList<>();
+        packetRecipients.add(damager);
+        if (!config.getBoolean("ShowToDamagerOnly")) {
+            for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
+                if (nearbyEntity instanceof Player)
+                    packetRecipients.add((Player) nearbyEntity);
+            }
+        }
+
+        Location finalSpawnLocation = spawnLocation;
+        DecimalFormat finalDamageFormat = damageFormat;
+
+        //ASYNC!?!?!?!
+        Thread t = new Thread(() -> createIndicator(finalSpawnLocation, finalDamageFormat, event.getFinalDamage(), packetRecipients));
+        t.start();
+
     }
 
     private void createIndicator(Location location, DecimalFormat nameFormat, double damage, List<Player> packetRecipients) {
