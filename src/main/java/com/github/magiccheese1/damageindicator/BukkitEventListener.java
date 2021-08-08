@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,10 +29,8 @@ public class BukkitEventListener implements Listener {
         this.packetManager = packetManager;
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.isCancelled())
-            return;
         // Don't show indicator if the damagee is an armor stand
         if (event.getEntity() instanceof ArmorStand)
             return;
@@ -103,7 +102,6 @@ public class BukkitEventListener implements Listener {
         //ASYNC!?!?!?!
         Thread t = new Thread(() -> createIndicator(finalSpawnLocation, finalDamageFormat, event.getFinalDamage(), packetRecipients));
         t.start();
-
     }
 
     private void createIndicator(Location location, DecimalFormat nameFormat, double damage, List<Player> packetRecipients) {
