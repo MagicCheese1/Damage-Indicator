@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +27,7 @@ public class BukkitEventListener implements Listener {
         this.packetManager = packetManager;
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.isCancelled())
             return;
