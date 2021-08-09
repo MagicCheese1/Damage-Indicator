@@ -18,7 +18,7 @@ public class CommandReload implements CommandExecutor {
             if (arg.length >= 1) {
                 if (arg[0].equalsIgnoreCase("reload")) {
                     this.plugin.reloadConfig();
-                    commandSender.sendMessage("DamageIndicator plugin has been reloaded");
+                    commandSender.sendMessage(ChatColor.YELLOW +"DamageIndicator plugin has been reloaded");
                 }
             }
         }
