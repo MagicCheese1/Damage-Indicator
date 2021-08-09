@@ -5,11 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class Cmd implements CommandExecutor {
-    private Main plugin;
+public class CommandReload implements CommandExecutor {
+    private final Main plugin;
 
-    public Cmd(Main plugin) {
-
+    public CommandReload(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -19,7 +18,7 @@ public class Cmd implements CommandExecutor {
             if (arg.length >= 1) {
                 if (arg[0].equalsIgnoreCase("reload")) {
                     this.plugin.reloadConfig();
-                    commandSender.sendMessage(ChatColor.YELLOW + " Plugin has been reloaded");
+                    commandSender.sendMessage("DamageIndicator plugin has been reloaded");
                 }
             }
         }

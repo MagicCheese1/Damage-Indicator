@@ -22,17 +22,22 @@ public class BukkitEventListener implements Listener {
     final private JavaPlugin plugin;
     final private PacketManager packetManager;
 
-    BukkitEventListener(JavaPlugin plugin,  PacketManager packetManager) {
+    BukkitEventListener(JavaPlugin plugin, PacketManager packetManager) {
         this.plugin = plugin;
         this.packetManager = packetManager;
+
     }
 
-    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
+    private FileConfiguration getSettings() {
+        return this.plugin.getConfig();
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
+
         // Don't show indicator if the damagee is an armor stand
         if (event.getEntity() instanceof ArmorStand)
             return;
-
         // Only show indicator if the damager was a player or an arrow
         if (!(event.getDamager() instanceof Player || event.getDamager() instanceof Projectile))
             return;
@@ -41,7 +46,7 @@ public class BukkitEventListener implements Listener {
         Location spawnLocation;
         Random random = new Random();
         DecimalFormat damageFormat = new DecimalFormat(
-                ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString(Utility.FORMAT_INDICATOR))));
+                ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.FORMAT_INDICATOR))));
 
         // Tries random positions until it finds one that is not inside a block
         int tries = 0;
@@ -74,20 +79,20 @@ public class BukkitEventListener implements Listener {
 
             if (arrow.isCritical())
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString(Utility.CRITACAL_FORMAT))));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITACAL_FORMAT))));
         } else {
             if (!(event.getDamager() instanceof Player))
                 return;
             damager = (Player) event.getDamager();
             if (Utility.isCritical(damager))
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString(Utility.CRITACAL_FORMAT))));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITACAL_FORMAT))));
         }
 
         // figure out who should see the indicator
         List<Player> packetRecipients = new ArrayList<>();
         packetRecipients.add(damager);
-        if (!this.plugin.getConfig().getBoolean(Utility.SHOW_DAMAGE_ONLY)) {
+        if (!getSettings().getBoolean(Utility.SHOW_DAMAGE_ONLY)) {
             for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
                 if (nearbyEntity instanceof Player)
                     packetRecipients.add((Player) nearbyEntity);
@@ -130,11 +135,12 @@ public class BukkitEventListener implements Listener {
                     packetManager.sendPacket(entityDestroyPacket, recipient);
                 }
             }
-        }.runTaskLaterAsynchronously(plugin, (long)secondsToTicks(this.plugin.getConfig().getDouble(Utility.INDICATOR_TIME)));
+        }.runTaskLaterAsynchronously(plugin, (long) secondsToTicks(getSettings().getDouble(Utility.INDICATOR_TIME)));
     }
 
     public static int secondsToTicks(double seconds) {
         return (int) (seconds * 20);
     }
+
 
 }

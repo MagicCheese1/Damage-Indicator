@@ -5,7 +5,6 @@ import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -29,7 +28,7 @@ public class Main extends JavaPlugin {
         }
         reloadConfig();
         // Register Command
-        getCommand("damageindicator").setExecutor(new Cmd(this));
+        getCommand("damageindicator").setExecutor(new CommandReload(this));
         // Get current minecraft version
         serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
