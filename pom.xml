@@ -8,7 +8,12 @@
   <version>1.2.5</version>
   <packaging>jar</packaging>
   <name>DamageIndicator</name>
-
+  <repositories>
+    <repository>
+      <id>maven-central</id>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+    </repository>
+  </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
@@ -16,10 +21,15 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>io.papermc.paper</groupId>
-      <artifactId>paper</artifactId>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
       <version>1.17.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tchristofferson</groupId>
+      <artifactId>ConfigUpdater</artifactId>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
