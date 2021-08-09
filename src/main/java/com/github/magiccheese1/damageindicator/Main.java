@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Main extends JavaPlugin {
 
@@ -22,7 +23,7 @@ public class Main extends JavaPlugin {
         // The config needs to exist before using the updater
         File configFile = new File(getDataFolder(), "config.yml");
         try {
-            ConfigUpdater.update(this, "config.yml", configFile, Arrays.asList("..."));
+            ConfigUpdater.update(this, "config.yml", configFile, Collections.emptyList());
         } catch (IOException e) {
             e.printStackTrace();
         }
