@@ -3,3 +3,7 @@ name: DamageIndicator
 author: MagicCheese1
 version: ${project.version}
 api-version: 1.16
+commands:
+  damageindicator:
+    description: Reload
+    permission: Damageindicator.admin

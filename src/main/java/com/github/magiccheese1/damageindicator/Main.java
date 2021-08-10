@@ -3,9 +3,14 @@ package com.github.magiccheese1.damageindicator;
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
+import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Main extends JavaPlugin {
 
@@ -14,10 +19,17 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         // Save the default config from src/resources/config.yml
-        this.saveDefaultConfig();
-        // Get current config
-        FileConfiguration config = this.getConfig();
-
+        saveDefaultConfig();
+        // The config needs to exist before using the updater
+        File configFile = new File(getDataFolder(), "config.yml");
+        try {
+            ConfigUpdater.update(this, "config.yml", configFile, Collections.emptyList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        reloadConfig();
+        // Register Command
+        getCommand("damageindicator").setExecutor(new CommandReload(this));
         // Get current minecraft version
         serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
@@ -27,7 +39,7 @@ public class Main extends JavaPlugin {
         } else {
             packetManager = new PacketManager1_17_R1();
         }
-        getServer().getPluginManager().registerEvents(new BukkitEventListener(this, config, packetManager), this);
+        getServer().getPluginManager().registerEvents(new BukkitEventListener(this, packetManager), this);
     }
 
 }

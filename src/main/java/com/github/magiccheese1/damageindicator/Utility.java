@@ -5,6 +5,13 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Utility {
 
+
+    public static final String SHOW_DAMAGE_ONLY = "ShowToDamagerOnly";
+    public static final String FORMAT_INDICATOR = "IndicatorFormat";
+    public static final String CRITACAL_FORMAT = "CriticalIndicatorFormat";
+    public static final String INDICATOR_TIME = "IndicatorTime";
+
+
     /**
      * Determine if the direct hit was a critical hit
      *
