@@ -25,6 +25,11 @@ IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
 ```
 
+## Commands and permissions
+
+`/damageindicator reload` reloads the config. requires `Damageindicator.admin` 
+
+
 ## Building
 
 1. Make sure you have [Maven](https://maven.apache.org/) installed
