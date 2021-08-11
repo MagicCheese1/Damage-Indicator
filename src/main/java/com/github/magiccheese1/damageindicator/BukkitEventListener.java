@@ -79,14 +79,14 @@ public class BukkitEventListener implements Listener {
 
             if (arrow.isCritical())
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITACAL_FORMAT))));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITICAL_FORMAT))));
         } else {
             if (!(event.getDamager() instanceof Player))
                 return;
             damager = (Player) event.getDamager();
             if (Utility.isCritical(damager))
                 damageFormat = new DecimalFormat(
-                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITACAL_FORMAT))));
+                        ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITICAL_FORMAT))));
         }
 
         // figure out who should see the indicator
