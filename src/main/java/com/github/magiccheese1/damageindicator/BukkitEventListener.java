@@ -84,7 +84,7 @@ public class BukkitEventListener implements Listener {
             if (!(event.getDamager() instanceof Player))
                 return;
             damager = (Player) event.getDamager();
-            if (Utility.isCritical(damager))
+            if (Utility.isCritical(damager, event.getEntity()))
                 damageFormat = new DecimalFormat(
                         ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITICAL_FORMAT))));
         }
