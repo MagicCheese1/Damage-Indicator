@@ -23,6 +23,8 @@ ShowToDamagerOnly: true
 #https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
 IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
+# Use Second
+IndicatorTime: 1.0
 ```
 
 ## Commands and permissions
