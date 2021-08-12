@@ -24,7 +24,7 @@ ShowToDamagerOnly: true
 IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
 # Use Second
-IndicatorTime: 1.0
+IndicatorTime: 1.5
 ```
 
 ## Commands and permissions

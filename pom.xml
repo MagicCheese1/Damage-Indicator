@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.magiccheese1.damageindicator</groupId>
   <artifactId>DamageIndicator</artifactId>
   <version>1.2.9</version>
   <packaging>jar</packaging>
+
   <name>DamageIndicator</name>
-  <repositories>
-    <repository>
-      <id>maven-central</id>
-      <url>https://oss.sonatype.org/content/groups/public</url>
-    </repository>
-  </repositories>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>io.papermc.paper</groupId>
@@ -27,12 +32,26 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>21.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.tchristofferson</groupId>
       <artifactId>ConfigUpdater</artifactId>
       <version>1.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
+
   <build>
+    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -59,12 +78,5 @@
         </executions>
       </plugin>
     </plugins>
-    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
   </build>
 </project>

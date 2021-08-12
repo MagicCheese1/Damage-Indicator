@@ -13,8 +13,6 @@ import java.util.Collections;
 
 public class Main extends JavaPlugin {
 
-    public static String serverVersion;
-
     @Override
     public void onEnable() {
         // Save the default config from src/resources/config.yml
@@ -30,14 +28,14 @@ public class Main extends JavaPlugin {
         // Register Command
         getCommand("damageindicator").setExecutor(new CommandReload(this));
         // Get current minecraft version
-        serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
+        final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
-        getLogger().info(serverVersion);
         if (serverVersion.equals("v1_16_R3")) {
             packetManager = new PacketManager1_16_R3();
         } else {
             packetManager = new PacketManager1_17_R1();
         }
+        getLogger().info(String.format("Using server version accessor for %s", serverVersion));
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this, packetManager), this);
     }
 

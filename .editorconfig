@@ -1,0 +1,32 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+max_line_length = 120
+insert_final_newline = true
+
+[{*.xml,*.yml}]
+indent_size = 2
+
+
+[*.java]
+# java docs
+ij_java_doc_enable_formatting = true
+ij_java_doc_add_blank_line_after_description = true
+ij_java_doc_add_blank_line_after_param_comments = true
+ij_java_doc_add_blank_line_after_return = true
+ij_java_doc_add_p_tag_on_empty_lines = true
+ij_java_doc_align_exception_comments = true
+ij_java_doc_align_param_comments = true
+ij_java_doc_indent_on_continuation = true
+ij_java_doc_keep_empty_lines = true
+ij_java_doc_param_description_on_new_line = false
+ij_java_doc_preserve_line_breaks = true
+ij_java_doc_use_throws_not_exception_tag = true
+ij_java_doc_do_not_wrap_if_one_line = true
+ij_java_wrap_comments = true
+ij_java_wrap_long_lines = true
+ij_java_insert_override_annotation = true
