@@ -1,7 +1,6 @@
-package com.github.magiccheese1.damageindicator.versions.v1_17_R1;
+package com.github.magiccheese1.damageindicator.versions;
 
 import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
-import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
@@ -9,6 +8,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -47,6 +47,35 @@ public final class PacketManager1_17_R1 implements PacketManager {
         this.worldGetHandleMethod = worldGetHandleMethod;
         this.playerConnectionSendPacketMethod = playerConnectionSendPacketMethod;
         this.entityPlayerPlayerConnectionField = entityPlayerPlayerConnectionField;
+    }
+
+    @NotNull
+    public static PacketManager1_17_R1 make() {
+        try {
+            return new PacketManager1_17_R1(
+                getMojangClass("world.entity.Entity").getMethod("getId"),
+                getMojangClass("world.entity.Entity").getMethod("getDataWatcher"),
+                getCBClass("entity.CraftEntity").getMethod("getHandle"),
+                getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
+                getCBClass("CraftWorld").getMethod("getHandle"),
+                getMojangClass("server.network.PlayerConnection")
+                    .getMethod("sendPacket", getMojangClass("network.protocol.Packet")),
+                getMojangClass("server.level.EntityPlayer").getField("b")
+            );
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Failed to create version specific server accessor", e);
+        }
+    }
+
+    @NotNull
+    private static Class<?> getMojangClass(@NotNull final String className) throws ClassNotFoundException {
+        return Class.forName("net.minecraft." + className);
+    }
+
+    @NotNull
+    private static Class<?> getCBClass(@NotNull final String className) throws ClassNotFoundException {
+        return Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getName().split("\\.")[3]
+            + "." + className);
     }
 
     @NotNull
