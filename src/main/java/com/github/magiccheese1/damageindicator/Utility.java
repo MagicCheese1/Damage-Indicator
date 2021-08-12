@@ -1,7 +1,5 @@
 package com.github.magiccheese1.damageindicator;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -19,10 +17,10 @@ public class Utility {
      *
      * @param damager - The damaging player
      */
-    public static boolean isCritical(Player damager, Entity target) {
+    public static boolean isCritical(Player damager) {
         return damager.getCooledAttackStrength(0.5F) > 0.9F && damager.getFallDistance() > 0.0F
                 && !damager.isOnGround() && !damager.isInWater() && damager.getActivePotionEffects().stream()
                 .noneMatch(o -> o.getType().equals(PotionEffectType.BLINDNESS))
-                && damager.getVehicle() == null && !damager.isSprinting() && target instanceof LivingEntity;
+                && damager.getVehicle() == null && !damager.isSprinting();
     }
 }

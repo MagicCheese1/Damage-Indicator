@@ -34,9 +34,11 @@ public class BukkitEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
-
+        if(!(event.getEntity() instanceof LivingEntity))
+            return;
+        LivingEntity entity = (LivingEntity) event.getEntity();
         // Don't show indicator if the damagee is an armor stand
-        if (event.getEntity() instanceof ArmorStand)
+        if (entity instanceof ArmorStand)
             return;
         // Only show indicator if the damager was a player or an arrow
         if (!(event.getDamager() instanceof Player || event.getDamager() instanceof Projectile))
@@ -52,10 +54,10 @@ public class BukkitEventListener implements Listener {
         int tries = 0;
         do {
             tries++;
-            spawnLocation = event.getEntity().getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
+            spawnLocation = entity.getLocation().add(random.nextDouble() * (1.0 + 1.0) - 1.0, 1,
                     random.nextDouble() * (1.0 + 1.0) - 1.0);
             if (tries > 20) {
-                spawnLocation = event.getEntity().getLocation();
+                spawnLocation = entity.getLocation();
                 break;
             }
         } while (!spawnLocation.getBlock().isEmpty() && !spawnLocation.getBlock().isLiquid()); // In previous
@@ -84,7 +86,7 @@ public class BukkitEventListener implements Listener {
             if (!(event.getDamager() instanceof Player))
                 return;
             damager = (Player) event.getDamager();
-            if (Utility.isCritical(damager, event.getEntity()))
+            if (Utility.isCritical(damager))
                 damageFormat = new DecimalFormat(
                         ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getSettings().getString(Utility.CRITICAL_FORMAT))));
         }
@@ -135,7 +137,7 @@ public class BukkitEventListener implements Listener {
                     packetManager.sendPacket(entityDestroyPacket, recipient);
                 }
             }
-        }.runTaskLaterAsynchronously(plugin, (long) secondsToTicks(getSettings().getDouble(Utility.INDICATOR_TIME)));
+        }.runTaskLaterAsynchronously(plugin, secondsToTicks(getSettings().getDouble(Utility.INDICATOR_TIME)));
     }
 
     public static int secondsToTicks(double seconds) {
