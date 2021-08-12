@@ -1,5 +1,6 @@
 package com.github.magiccheese1.damageindicator.versions;
 
+import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
@@ -13,65 +14,70 @@ import net.minecraft.world.entity.decoration.EntityArmorStand;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
+/**
+ * Implementation of the packet manager for the 1.17 minecraft java version.
+ * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
+ */
+public final class PacketManager1_17_R1 implements PacketManager {
 
-public class PacketManager1_17_R1 implements PacketManager {
-
-    public Object buildEntitySpawnPacket(Object entity) {
+    @NotNull
+    public Object buildEntitySpawnPacket(@NotNull Object entity) {
         return new PacketPlayOutSpawnEntityLiving((EntityLiving) entity);
     }
 
-    public Object buildEntityMetadataPacket(Object entity, boolean a) {
+    @NotNull
+    public Object buildEntityMetadataPacket(@NotNull Object entity, boolean forceUpdateAll) {
         try {
-            int entityId = (int) entity.getClass().getMethod("getId").invoke(entity);
-            Object dataWatcher = entity.getClass().getMethod("getDataWatcher").invoke(entity);
-            return new PacketPlayOutEntityMetadata(entityId, (DataWatcher) dataWatcher, a);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
-            e.printStackTrace();
+            final int entityId = (int) entity.getClass().getMethod("getId").invoke(entity);
+            final Object dataWatcher = entity.getClass().getMethod("getDataWatcher").invoke(entity);
+            return new PacketPlayOutEntityMetadata(entityId, (DataWatcher) dataWatcher, forceUpdateAll);
+        } catch (final ReflectiveOperationException e) {
+            throw new NMSAccessException("Failed to create entity metadata packet", e);
         }
-        return null;
     }
 
-    public Object buildEntityDestroyPacket(Object entity) {
+    @NotNull
+    public Object buildEntityDestroyPacket(@NotNull Object entity) {
         try {
-            int entityId = (int) entity.getClass().getMethod("getId").invoke(entity);
+            final int entityId = (int) entity.getClass().getMethod("getId").invoke(entity);
             return new PacketPlayOutEntityDestroy(entityId);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
-            e.printStackTrace();
+        } catch (final ReflectiveOperationException e) {
+            throw new NMSAccessException("Failed to create entity destroy packet", e);
         }
-        return null;
     }
 
-    public Object BuildEntityArmorStand(Location location, String name) {
+    @NotNull
+    public Object buildEntityArmorStand(@NotNull Location location, @NotNull String name) {
         try {
-            World world = location.getWorld();
-            WorldServer WorldServer = (WorldServer) world.getClass().getMethod("getHandle").invoke(world);
-            Object entityArmorStand = new EntityArmorStand(WorldServer,
-                    location.getX(), location.getY(), location.getZ());
+            final World world = location.getWorld();
+            final WorldServer worldServer = (WorldServer) world.getClass().getMethod("getHandle").invoke(world);
+
+            final Object entityArmorStand = new EntityArmorStand(
+                worldServer,
+                location.getX(), location.getY(), location.getZ()
+            );
             entityArmorStand.getClass().getMethod("setMarker", boolean.class).invoke(entityArmorStand, true);
             entityArmorStand.getClass().getMethod("setInvisible", boolean.class).invoke(entityArmorStand, true);
             entityArmorStand.getClass().getMethod("setCustomNameVisible", boolean.class).invoke(entityArmorStand, true);
-            entityArmorStand.getClass().getMethod("setCustomName", IChatBaseComponent.class).invoke(entityArmorStand,
-                    new ChatMessage(name));
+            entityArmorStand.getClass().getMethod("setCustomName", IChatBaseComponent.class).invoke(
+                entityArmorStand,
+                new ChatMessage(name)
+            );
             return entityArmorStand;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
-            e.printStackTrace();
+        } catch (final ReflectiveOperationException e) {
+            throw new NMSAccessException("Failed to create new entity armor stand", e);
         }
-        return null;
     }
 
-    public void sendPacket(Object packet, Player player) {
+    public void sendPacket(@NotNull Object packet, @NotNull Player player) {
         try {
-            Object handle = player.getClass().getMethod("getHandle").invoke(player);
-            Object playerConnection = handle.getClass().getField("b").get(handle);
+            final Object handle = player.getClass().getMethod("getHandle").invoke(player);
+            final Object playerConnection = handle.getClass().getField("b").get(handle);
             playerConnection.getClass().getMethod("sendPacket", Packet.class).invoke(playerConnection, packet);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException | NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (final ReflectiveOperationException e) {
+            throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
         }
     }
 }
