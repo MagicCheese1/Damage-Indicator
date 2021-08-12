@@ -1,8 +1,8 @@
 package com.github.magiccheese1.damageindicator;
 
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
-import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
-import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
+import com.github.magiccheese1.damageindicator.versions.v1_16_R3.PacketManagerFactory1_16_R3;
+import com.github.magiccheese1.damageindicator.versions.v1_17_R1.PacketManagerFactory1_17_R1;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,13 +27,14 @@ public class Main extends JavaPlugin {
         reloadConfig();
         // Register Command
         getCommand("damageindicator").setExecutor(new CommandReload(this));
+
         // Get current minecraft version
         final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
         if (serverVersion.equals("v1_16_R3")) {
-            packetManager = new PacketManager1_16_R3();
+            packetManager = PacketManagerFactory1_16_R3.make();
         } else {
-            packetManager = new PacketManager1_17_R1();
+            packetManager = PacketManagerFactory1_17_R1.make();
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this, packetManager), this);
