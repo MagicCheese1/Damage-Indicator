@@ -6,7 +6,7 @@
 
   <groupId>com.github.magiccheese1.damageindicator</groupId>
   <artifactId>DamageIndicator</artifactId>
-  <version>1.2.9</version>
+  <version>1.2.11</version>
   <packaging>jar</packaging>
 
   <name>DamageIndicator</name>

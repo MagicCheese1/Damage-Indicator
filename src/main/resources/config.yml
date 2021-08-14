@@ -1,9 +1,19 @@
-#Should the indicator be shown to everyone(true) or just the damager(false)
+## Should the indicator be shown to everyone(true) or just the player who dealt the damage(false)
 ShowToDamagerOnly: true
 
-#The format for showing the damage (example: "&7-0.0#&4❤")
-#https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
+## The format for showing the damage
+# Read about decimal formats to learn how to configure the indicator format.
+# https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html
+
+# Hex colours are supported using the legacy format (e.g. &x&F&F&F&F&F&F to represent white), but may also be defined
+# using a smaller version unique to the damage indicator plugin (e.g. &#FFFFFF to represent white). Note that the usage
+# of 0's in the hex code would mess with the decimal formatting, hence they should be escaped using single quotes, such
+# as this:
+# IndicatorFormat: "'&#FFC300'-0.#&4❤"
+
+# using Hex colours is optional. The legacy minecraft colour codes are still supported.
 IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
-# Use Second
+
+## For how long an indicator should be shown. (Use seconds)
 IndicatorTime: 1.5
