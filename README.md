@@ -27,6 +27,15 @@ CriticalIndicatorFormat: "&c-0.#&4❤"
 IndicatorTime: 1.5
 ```
 
+> Hex colours are supported using the legacy format (e.g. §x§F§F§F§F§F§F to represent white), but may also be defined
+> using a smaller version unique to the damage indicator (e.g. §#FFFFFF to represent white).
+> 
+> Note that the usage of 0's in the hex code would mess with the decimal formatting, hence they should be escaped using
+> single quotes, such as this:
+> ```yaml
+> IndicatorFormat: "'§#FFC300'-0.#&4❤"
+> ```
+
 ## Commands and permissions
 
 `/damageindicator reload` reloads the config. requires `Damageindicator.admin` 

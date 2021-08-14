@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator;
+package com.github.magiccheese1.damageindicator.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,6 +46,8 @@ public class Utility {
         final String stringFormat = configuration.getString(path);
         if (stringFormat == null) return Optional.empty();
 
-        return Optional.of(new DecimalFormat(ChatColor.translateAlternateColorCodes('&', stringFormat)));
+        return Optional.of(new DecimalFormat(
+            ChatColor.translateAlternateColorCodes('&', TextUtility.convertEasyHexToLegacy(stringFormat))
+        ));
     }
 }

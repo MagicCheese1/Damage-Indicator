@@ -1,5 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
+import com.github.magiccheese1.damageindicator.util.Utility;
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
