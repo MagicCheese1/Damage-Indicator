@@ -64,7 +64,7 @@ public final class PacketManager1_16_R3 implements PacketManager {
                 getNMSClass("PacketPlayOutSpawnEntityLiving").getConstructor(getNMSClass("EntityLiving")),
                 getNMSClass("PacketPlayOutEntityMetadata")
                     .getConstructor(int.class, getNMSClass("DataWatcher"), boolean.class),
-                getNMSClass("PacketPlayOutDestoryEntity").getConstructor(int[].class),
+                getNMSClass("PacketPlayOutEntityDestroy").getConstructor(int[].class),
                 getNMSClass("EntityArmorStand")
                     .getConstructor(getNMSClass("World"), double.class, double.class, double.class),
 
