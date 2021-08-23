@@ -1,6 +1,6 @@
 # Damage Indicator
 
-This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds an indicators for how much damage you dealt to an entity.
+This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds indicators that show how much damage you dealt to an entity.
 ![](/images/dmgindicatorscreen.png)
 
 ## Installing
