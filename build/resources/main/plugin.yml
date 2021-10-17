@@ -1,8 +1,0 @@
-name: 'DamageIndicator'
-version: '1.2.12'
-main: com.github.magiccheese1.damageindicator.Main
-api-version: 1.16
-commands:
-  damageindicator:
-    description: Reload
-    permission: Damageindicator.admin
