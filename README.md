@@ -45,10 +45,9 @@ IndicatorTime: 1.5
 
 ## Building
 
-1. Make sure you have [Maven](https://maven.apache.org/) installed
 2. Clone this repo
-3. open a terminal and type `mvn package`
-4. The jar file is in the /target/ folder
+3. open a terminal and type `gradlew build`
+4. The jar file is at /build/libs/DamageIndicator.jar
 
 ## License
 
