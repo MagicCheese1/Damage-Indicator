@@ -1,0 +1,64 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'java'
+}
+
+group = 'com.github.magiccheese1.damageindicator'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+
+dependencies {
+    implementation 'com.tchristofferson:ConfigUpdater:1.2-SNAPSHOT'
+    compileOnly 'org.jetbrains:annotations:21.0.1'
+    compileOnly 'io.papermc.paper:paper:1.17.1-R0.1-SNAPSHOT'
+
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'io.papermc.paper:paper:1.17.1-R0.1-SNAPSHOT'
+}
+
+test {
+    useJUnit()
+}
+
+jar {
+    archiveFileName.set("${pluginName}-noshade.jar")
+}
+shadowJar {
+    relocate 'com.tchristofferson.ConfigUpdater', 'io.github.magiccheese1.damageindicator.ConfigUpdater'
+    archiveFileName.set("${pluginName}.jar")
+}
+jar.dependsOn(shadowJar)
+
+def targetJavaVersion = 16
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+//Replace plugin name and version in plugin.yml
+processResources {
+    def props = [version: version, pluginName: pluginName, group: project.getGroup()]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
