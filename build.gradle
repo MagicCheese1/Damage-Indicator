@@ -37,7 +37,7 @@ shadowJar {
 }
 jar.dependsOn(shadowJar)
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
