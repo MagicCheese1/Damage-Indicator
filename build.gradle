@@ -29,11 +29,11 @@ test {
 }
 
 jar {
-    archiveFileName.set("${pluginName}-noshade.jar")
+    archiveFileName.set("DamageIndicator-noshade.jar")
 }
 shadowJar {
     relocate 'com.tchristofferson.ConfigUpdater', 'io.github.magiccheese1.damageindicator.ConfigUpdater'
-    archiveFileName.set("${pluginName}.jar")
+    archiveFileName.set("DamageIndicator.jar")
 }
 jar.dependsOn(shadowJar)
 
@@ -55,7 +55,7 @@ tasks.withType(JavaCompile).configureEach {
 
 //Replace plugin name and version in plugin.yml
 processResources {
-    def props = [version: version, pluginName: pluginName, group: project.getGroup()]
+    def props = [version: version, group: project.getGroup()]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {

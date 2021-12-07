@@ -31,12 +31,12 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew -PpluginName="${{ github.event.repository.name }}" build
+        run: ./gradlew build
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: build/libs/${{ github.event.repository.name }}.jar
+          files: build/libs/DamageIndicator.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
