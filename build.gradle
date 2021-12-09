@@ -28,12 +28,8 @@ test {
     useJUnit()
 }
 
-jar {
-    archiveFileName.set("DamageIndicator-noshade.jar")
-}
 shadowJar {
     relocate 'com.tchristofferson.ConfigUpdater', 'io.github.magiccheese1.damageindicator.ConfigUpdater'
-    archiveFileName.set("DamageIndicator.jar")
 }
 jar.dependsOn(shadowJar)
 
