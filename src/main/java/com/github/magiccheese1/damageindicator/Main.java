@@ -3,6 +3,7 @@ package com.github.magiccheese1.damageindicator;
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
 import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
+import com.github.magiccheese1.damageindicator.versions.PacketManager1_18_R1;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,10 +32,18 @@ public class Main extends JavaPlugin {
         // Get current minecraft version
         final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
-        if (serverVersion.equals("v1_16_R3")) {
-            packetManager = PacketManager1_16_R3.make();
-        } else {
-            packetManager = PacketManager1_17_R1.make();
+        switch (serverVersion) {
+            case "v1_16_R3":
+                packetManager = PacketManager1_16_R3.make();
+                break;
+            case "v1_17_R1":
+                packetManager = PacketManager1_17_R1.make();
+                break;
+            case "v1_18_R1":
+                packetManager = PacketManager1_18_R1.make();
+                break;
+            default:
+                throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this, packetManager), this);

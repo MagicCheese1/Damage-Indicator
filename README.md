@@ -33,9 +33,13 @@ ShowToDamagerOnly: true
 IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
 
+## The decimal format's locale (BCP47)
+# This determines the locale used for formatting. The formatter uses this e.g. when deciding between a dot ('0.0')
+# or a comma ('0,0') for decimal numbers.
+FormatLocale: "en-US"
+
 ## For how long an indicator should be shown. (Use seconds)
 IndicatorTime: 1.5
-
 ```
 
 ## Commands and permissions
