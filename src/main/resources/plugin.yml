@@ -1,4 +1,4 @@
-name: '${pluginName}'
+name: 'DamageIndicator'
 version: '${version}'
 main: com.github.magiccheese1.damageindicator.Main
 api-version: 1.16
