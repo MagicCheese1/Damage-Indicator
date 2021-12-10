@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     implementation 'com.tchristofferson:ConfigUpdater:1.2-SNAPSHOT'
-    compileOnly 'org.jetbrains:annotations:21.0.1'
+    compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly 'io.papermc.paper:paper:1.17.1-R0.1-SNAPSHOT'
 
     testImplementation 'junit:junit:4.13'
