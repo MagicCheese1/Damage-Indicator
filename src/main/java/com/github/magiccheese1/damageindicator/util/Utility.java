@@ -7,6 +7,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Optional;
 
 public class Utility {
@@ -35,7 +37,7 @@ public class Utility {
      * String)}.
      *
      * @param configuration the configuration instance to pull the string format from.
-     * @param path          the path that correlates to the damage format inside the file configuration.
+     * @param path    the path that correlates to the damage format inside the file configuration.
      *
      * @return the parsed decimal format. If the configuration did not contain the path, the returned optional will be
      *     empty.
@@ -44,10 +46,12 @@ public class Utility {
     public static Optional<DecimalFormat> getConfigurationDamageFormat(@NotNull final FileConfiguration configuration,
                                                                        @NotNull String path) {
         final String stringFormat = configuration.getString(path);
+        final String formatLocale = Optional.ofNullable(configuration.getString("FormatLocale"))
+            .orElse("en-US");
         if (stringFormat == null) return Optional.empty();
-
-        return Optional.of(new DecimalFormat(
-            ChatColor.translateAlternateColorCodes('&', TextUtility.convertEasyHexToLegacy(stringFormat))
-        ));
+        DecimalFormat format = ((DecimalFormat) NumberFormat.getNumberInstance(Locale.forLanguageTag(formatLocale)));
+        format.applyPattern(
+            ChatColor.translateAlternateColorCodes('&', TextUtility.convertEasyHexToLegacy(stringFormat)));
+        return Optional.of(format);
     }
 }
