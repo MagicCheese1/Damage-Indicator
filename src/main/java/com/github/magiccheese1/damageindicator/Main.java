@@ -1,9 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
-import com.github.magiccheese1.damageindicator.versions.PacketManager;
-import com.github.magiccheese1.damageindicator.versions.PacketManager1_16_R3;
-import com.github.magiccheese1.damageindicator.versions.PacketManager1_17_R1;
-import com.github.magiccheese1.damageindicator.versions.PacketManager1_18_R1;
+import com.github.magiccheese1.damageindicator.versions.*;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +37,7 @@ public class Main extends JavaPlugin {
                 packetManager = PacketManager1_17_R1.make();
                 break;
             case "v1_18_R1":
+            case "v1_18_R2":
                 packetManager = PacketManager1_18_R1.make();
                 break;
             default:
