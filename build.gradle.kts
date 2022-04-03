@@ -8,7 +8,7 @@ group = "io.github.magiccheese1"
 version = "1.3.2"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(16))
 }
 
 
@@ -29,7 +29,7 @@ dependencies {
 tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(16)
     }
     processResources {
 
