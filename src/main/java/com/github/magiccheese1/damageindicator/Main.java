@@ -40,6 +40,9 @@ public class Main extends JavaPlugin {
             case "v1_18_R2":
                 packetManager = PacketManager1_18_R1.make();
                 break;
+            case "v1_19_R1":
+                packetManager = PacketManager1_19_R1.make();
+                break;
             default:
                 throw new RuntimeException("Failed to create version specific server accessor");
         }
