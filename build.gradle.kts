@@ -31,6 +31,9 @@ tasks {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(16)
     }
+    compileTestJava {
+        options.encoding = Charsets.UTF_8.name()
+    }
     processResources {
 
     }
