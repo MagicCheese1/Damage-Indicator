@@ -3,33 +3,54 @@ package com.github.magiccheese1.damageindicator;
 import com.github.magiccheese1.damageindicator.util.Utility;
 import com.github.magiccheese1.damageindicator.versions.PacketManager;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BukkitEventListener implements Listener {
 
     private final Plugin plugin;
     private final PacketManager packetManager;
+    private final NamespacedKey key;
 
     public BukkitEventListener(@NotNull final Plugin plugin, @NotNull final PacketManager packetManager) {
         this.plugin = plugin;
         this.packetManager = packetManager;
+        this.key = new NamespacedKey(plugin, "poisoned-by");
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void entityDamage(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.POISON) return;
+        PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (container.has(key, PersistentDataType.STRING)) {
+            final FileConfiguration configuration = this.plugin.getConfig();
+//            plugin.getLogger().info(container.get(key, PersistentDataType.STRING));
+            newIndicator((LivingEntity) event.getEntity(),
+                plugin.getServer().getPlayer(UUID.fromString(container.get(key, PersistentDataType.STRING))),
+                configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY),
+                Utility.getConfigurationDamageFormat(configuration, Utility.FORMAT_INDICATOR).orElseThrow(
+                    () -> new IllegalStateException("Plugin configuration did not provide indicator format")),
+                event.getFinalDamage());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -40,7 +61,6 @@ public class BukkitEventListener implements Listener {
         // Don't show indicator if the damagee is an armor stand
         if (entity instanceof ArmorStand) return;
 
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
         final FileConfiguration configuration = this.plugin.getConfig();
         Player damager = null;
         DecimalFormat damageFormat = Utility.getConfigurationDamageFormat(configuration, Utility.FORMAT_INDICATOR)
@@ -55,23 +75,43 @@ public class BukkitEventListener implements Listener {
             if (!(projectile.getShooter() instanceof Player)) return;
             damager = (Player) projectile.getShooter();
 
-            if (projectile instanceof AbstractArrow && ((AbstractArrow) projectile).isCritical()) {
-                damageFormat = Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
-                    () -> new IllegalStateException("Plugin configuration did not provide critical indicator format")
-                );
+            if (projectile instanceof AbstractArrow) {
+                if (((AbstractArrow) projectile).isCritical()) {
+                    damageFormat
+                        = Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
+                            () -> new IllegalStateException(
+                                "Plugin configuration did not provide critical indicator format"));
+                }
+                if (projectile instanceof Arrow) {
+                    if (((Arrow) projectile).getBasePotionData().getType() == PotionType.POISON) {
+                        entity.getPersistentDataContainer().set(key, PersistentDataType.STRING,
+                            damager.getUniqueId().toString());
+                        this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
+                            entity.getPersistentDataContainer().remove(key);
+                        }, PoisonArrowEffectDuration(((Arrow) projectile).getBasePotionData()));
+                    }
+                }
             }
         } else if (event.getDamager() instanceof Player) {
             damager = (Player) event.getDamager();
 
             if (Utility.isCritical(damager)) {
-                damageFormat = Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
-                    () -> new IllegalStateException("Plugin configuration did not provide critical indicator format")
-                );
+                damageFormat =
+                    Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
+                        () -> new IllegalStateException(
+                            "Plugin configuration did not provide critical indicator format"));
             }
         }
 
         if (damager == null) return; // Could not parse the damaging player from the event.
 
+        newIndicator(entity, damager, configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY), damageFormat,
+            event.getFinalDamage());
+    }
+
+    private void newIndicator(LivingEntity entity, Player damager, boolean showDamagerOnly,
+                              DecimalFormat damageFormat, double damage) {
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
         // Attempts to final a random positions until it finds one that is not inside a block
         Location spawnLocation;
         int attempts = 0;
@@ -87,7 +127,7 @@ public class BukkitEventListener implements Listener {
         // figure out who should see the indicator
         List<Player> packetRecipients = new ArrayList<>();
         packetRecipients.add(damager);
-        if (!configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY)) {
+        if (showDamagerOnly) {
             for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
                 if (nearbyEntity instanceof Player) packetRecipients.add((Player) nearbyEntity);
             }
@@ -98,19 +138,11 @@ public class BukkitEventListener implements Listener {
 
         // Queue packet sending.
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin,
-            () -> summonAndQueueIndicatorDeletion(
-                finalSpawnLocation,
-                finalDamageFormat,
-                event.getFinalDamage(),
-                packetRecipients
-            )
-        );
+            () -> summonAndQueueIndicatorDeletion(finalSpawnLocation, finalDamageFormat, damage, packetRecipients));
     }
 
-    private void summonAndQueueIndicatorDeletion(@NotNull Location location,
-                                                 @NotNull DecimalFormat nameFormat,
-                                                 double damage,
-                                                 @NotNull List<@NotNull Player> packetRecipients) {
+    private void summonAndQueueIndicatorDeletion(@NotNull Location location, @NotNull DecimalFormat nameFormat,
+                                                 double damage, @NotNull List<@NotNull Player> packetRecipients) {
         //Create the entity
         final Object indicatorEntity = packetManager.buildEntityArmorStand(location,
             String.valueOf(nameFormat.format(damage)));
@@ -134,4 +166,9 @@ public class BukkitEventListener implements Listener {
         }, (long) (this.plugin.getConfig().getDouble(Utility.INDICATOR_TIME, 1.5) * 20));
     }
 
+    private int PoisonArrowEffectDuration(PotionData basePotionData) {
+        if (basePotionData.isUpgraded()) return 54;
+        if (basePotionData.isExtended()) return 225;
+        return 112;
+    }
 }
