@@ -36,7 +36,7 @@ public class BukkitEventListener implements Listener {
         this.key = new NamespacedKey(plugin, "poisoned-by");
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void entityDamage(EntityDamageEvent event) {
         if (event.getCause() != EntityDamageEvent.DamageCause.POISON) return;
         PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
