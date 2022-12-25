@@ -144,8 +144,8 @@ public class BukkitEventListener implements Listener {
             event.getFinalDamage());
     }
 
-    private void newIndicator(LivingEntity entity, Player damager, boolean showDamagerOnly,
-                              DecimalFormat damageFormat, double damage) {
+    private void newIndicator(@NotNull LivingEntity entity, Player damager, boolean showDamagerOnly,
+                              @NotNull DecimalFormat damageFormat, double damage) {
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         // Attempts to final a random positions until it finds one that is not inside a block
         Location spawnLocation;
@@ -162,6 +162,12 @@ public class BukkitEventListener implements Listener {
 
         // figure out who should see the indicator
         List<Player> packetRecipients = new ArrayList<>();
+        if (showDamagerOnly) {
+            for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
+                if (nearbyEntity instanceof Player) packetRecipients.add((Player) nearbyEntity);
+            }
+        } else if (Objects.isNull(damager)) return;
+
         packetRecipients.add(damager);
         if (showDamagerOnly) {
             for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
@@ -183,8 +189,8 @@ public class BukkitEventListener implements Listener {
         entity.getPersistentDataContainer().set(key, PersistentDataType.STRING,
             damager.getUniqueId().toString());
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
-            if (entity.getPersistentDataContainer().get(key, PersistentDataType.STRING)
-                .equals(damager.getUniqueId().toString()))
+            if (Objects.equals(entity.getPersistentDataContainer().get(key, PersistentDataType.STRING),
+                damager.getUniqueId().toString()))
                 entity.getPersistentDataContainer().remove(key);
         }, effectDuration);
     }
