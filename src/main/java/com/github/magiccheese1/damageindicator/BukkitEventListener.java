@@ -183,7 +183,9 @@ public class BukkitEventListener implements Listener {
         entity.getPersistentDataContainer().set(key, PersistentDataType.STRING,
             damager.getUniqueId().toString());
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
-            entity.getPersistentDataContainer().remove(key);
+            if (entity.getPersistentDataContainer().get(key, PersistentDataType.STRING)
+                .equals(damager.getUniqueId().toString()))
+                entity.getPersistentDataContainer().remove(key);
         }, effectDuration);
     }
 
