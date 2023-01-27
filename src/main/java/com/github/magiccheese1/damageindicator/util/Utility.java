@@ -16,6 +16,7 @@ public class Utility {
     public static final String SHOW_DAMAGE_ONLY = "ShowToDamagerOnly";
     public static final String FORMAT_INDICATOR = "IndicatorFormat";
     public static final String CRITICAL_FORMAT = "CriticalIndicatorFormat";
+    public static final String POISON_FORMAT = "PoisonIndicatorFormat";
     public static final String INDICATOR_TIME = "IndicatorTime";
 
     /**
@@ -37,7 +38,7 @@ public class Utility {
      * String)}.
      *
      * @param configuration the configuration instance to pull the string format from.
-     * @param path    the path that correlates to the damage format inside the file configuration.
+     * @param path          the path that correlates to the damage format inside the file configuration.
      *
      * @return the parsed decimal format. If the configuration did not contain the path, the returned optional will be
      *     empty.

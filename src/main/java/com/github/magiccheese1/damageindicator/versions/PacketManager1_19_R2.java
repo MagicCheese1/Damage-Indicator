@@ -67,7 +67,8 @@ public final class PacketManager1_19_R2 implements PacketManager {
                     .getMethod("a", getMojangClass("network.protocol.Packet")),
                 getMojangClass("world.entity.Entity").getMethod("al"),
                 getMojangClass("network.syncher.DataWatcher").getMethod("b"),
-                getMojangClass("network.protocol.game.PacketPlayOutEntityMetadata").getConstructor(int.class, List.class),
+                getMojangClass("network.protocol.game.PacketPlayOutEntityMetadata").getConstructor(int.class,
+                    List.class),
                 getMojangClass("server.level.EntityPlayer").getField("b")
             );
         } catch (ReflectiveOperationException e) {
@@ -98,8 +99,10 @@ public final class PacketManager1_19_R2 implements PacketManager {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
             final Object synchedEntityData = this.entityGetDataMethod.invoke(entity);
-//            return new PacketPlayOutEntityMetadata(entityId, this.synchedEntityDataGetDirtyMethod.invoke(synchedEntityData));
-            return this.clientboundSetEntityDataPacketInit.newInstance(entityId, this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
+//            return new PacketPlayOutEntityMetadata(entityId, this.synchedEntityDataGetDirtyMethod.invoke
+//            (synchedEntityData));
+            return this.clientboundSetEntityDataPacketInit.newInstance(entityId,
+                this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity metadata packet", e);
         }

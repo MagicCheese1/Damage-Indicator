@@ -48,7 +48,7 @@ public class BukkitEventListener implements Listener {
             newIndicator((LivingEntity) event.getEntity(),
                 plugin.getServer().getPlayer(UUID.fromString(container.get(key, PersistentDataType.STRING))),
                 configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY),
-                Utility.getConfigurationDamageFormat(configuration, Utility.FORMAT_INDICATOR).orElseThrow(
+                Utility.getConfigurationDamageFormat(configuration, Utility.POISON_FORMAT).orElseThrow(
                     () -> new IllegalStateException("Plugin configuration did not provide indicator format")),
                 event.getFinalDamage());
         }
@@ -82,17 +82,15 @@ public class BukkitEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void LingeringPotionSplash(LingeringPotionSplashEvent event) {
         if (event.getAreaEffectCloud().getBasePotionData().getType() != PotionType.POISON) return;
-        if (!(event.getEntity().getShooter() instanceof Player)) return;
-        Player shooter = (Player) event.getEntity().getShooter();
+        if (!(event.getEntity().getShooter() instanceof Player shooter)) return;
         event.getAreaEffectCloud().getPersistentDataContainer().set(key, PersistentDataType.STRING,
             shooter.getUniqueId().toString());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (!(event.getEntity() instanceof final LivingEntity entity)) return;
 
-        final LivingEntity entity = (LivingEntity) event.getEntity();
         // Don't show indicator if the damagee is an armor stand
         if (entity instanceof ArmorStand) return;
 
@@ -105,8 +103,7 @@ public class BukkitEventListener implements Listener {
 
         // Check if the damager is an arrow. If it is use arrow.isCritical().
         // If it isn't use the custom isCritical() for direct damage.
-        if (event.getDamager() instanceof Projectile) {
-            final Projectile projectile = (Projectile) event.getDamager();
+        if (event.getDamager() instanceof final Projectile projectile) {
 
             // Don't show indicator if the arrow doesn't belong to a player
             if (!(projectile.getShooter() instanceof Player)) return;
@@ -169,11 +166,6 @@ public class BukkitEventListener implements Listener {
         } else if (Objects.isNull(damager)) return;
 
         packetRecipients.add(damager);
-        if (showDamagerOnly) {
-            for (Entity nearbyEntity : damager.getNearbyEntities(16, 16, 16)) {
-                if (nearbyEntity instanceof Player) packetRecipients.add((Player) nearbyEntity);
-            }
-        }
 
         final Location finalSpawnLocation = spawnLocation;
         final DecimalFormat finalDamageFormat = damageFormat;
@@ -185,7 +177,7 @@ public class BukkitEventListener implements Listener {
     }
 
     private void markEntityPoisonedAndQueueUnmark(@NotNull LivingEntity entity, @NotNull Player damager,
-                                                  @NotNull int effectDuration) {
+                                                  int effectDuration) {
         entity.getPersistentDataContainer().set(key, PersistentDataType.STRING,
             damager.getUniqueId().toString());
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
