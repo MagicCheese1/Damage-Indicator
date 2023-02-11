@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator.versions;
+package com.github.magiccheese1.damageindicator.packetManager;
 
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;

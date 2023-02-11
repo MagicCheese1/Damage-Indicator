@@ -1,7 +1,13 @@
-package com.github.magiccheese1.damageindicator.versions;
+package com.github.magiccheese1.damageindicator.packetManager;
 
 import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
-import com.google.common.base.Preconditions;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.network.syncher.DataWatcher;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.decoration.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,20 +15,14 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Implementation of the packet manager for the 1.16 minecraft java version.
- * The implementation relies purely on reflective access to the server internals.
+ * Implementation of the packet manager for the 1.19 minecraft java version.
+ * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
-public final class PacketManager1_16_R3 implements PacketManager {
-
-    private final Constructor<?> packetPlayOutSpawnEntityLivingConstructor;
-    private final Constructor<?> packetPlayOutEntityMetadataConstructor;
-    private final Constructor<?> packetPlayOutDestroyEntityConstructor;
-    private final Constructor<?> entityArmorStandConstructor;
+public final class PacketManager1_19_R1 implements PacketManager {
 
     private final Method entityGetIdMethod;
     private final Method entityGetDataWatcherMethod;
@@ -33,21 +33,13 @@ public final class PacketManager1_16_R3 implements PacketManager {
 
     private final Field entityPlayerPlayerConnectionField;
 
-    public PacketManager1_16_R3(final @NotNull Constructor<?> packetPlayOutSpawnEntityLivingConstructor,
-                                final @NotNull Constructor<?> packetPlayOutEntityMetadataConstructor,
-                                final @NotNull Constructor<?> packetPlayOutDestroyEntityConstructor,
-                                final @NotNull Constructor<?> entityArmorStandConstructor,
-                                final @NotNull Method entityGetIdMethod,
+    public PacketManager1_19_R1(final @NotNull Method entityGetIdMethod,
                                 final @NotNull Method entityGetDataWatcherMethod,
                                 final @NotNull Method entityGetHandleMethod,
                                 final @NotNull Method entityGetBukkitEntityMethod,
                                 final @NotNull Method worldGetHandleMethod,
                                 final @NotNull Method playerConnectionSendPacketMethod,
                                 final @NotNull Field entityPlayerPlayerConnectionField) {
-        this.packetPlayOutSpawnEntityLivingConstructor = packetPlayOutSpawnEntityLivingConstructor;
-        this.packetPlayOutEntityMetadataConstructor = packetPlayOutEntityMetadataConstructor;
-        this.packetPlayOutDestroyEntityConstructor = packetPlayOutDestroyEntityConstructor;
-        this.entityArmorStandConstructor = entityArmorStandConstructor;
         this.entityGetIdMethod = entityGetIdMethod;
         this.entityGetDataWatcherMethod = entityGetDataWatcherMethod;
         this.entityGetHandleMethod = entityGetHandleMethod;
@@ -58,24 +50,17 @@ public final class PacketManager1_16_R3 implements PacketManager {
     }
 
     @NotNull
-    public static PacketManager1_16_R3 make() {
+    public static PacketManager1_19_R1 make() {
         try {
-            return new PacketManager1_16_R3(
-                getNMSClass("PacketPlayOutSpawnEntityLiving").getConstructor(getNMSClass("EntityLiving")),
-                getNMSClass("PacketPlayOutEntityMetadata")
-                    .getConstructor(int.class, getNMSClass("DataWatcher"), boolean.class),
-                getNMSClass("PacketPlayOutEntityDestroy").getConstructor(int[].class),
-                getNMSClass("EntityArmorStand")
-                    .getConstructor(getNMSClass("World"), double.class, double.class, double.class),
-
-                getNMSClass("Entity").getMethod("getId"),
-                getNMSClass("Entity").getMethod("getDataWatcher"),
+            return new PacketManager1_19_R1(
+                getMojangClass("world.entity.Entity").getMethod("ae"),
+                getMojangClass("world.entity.Entity").getMethod("ai"),
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
-                getNMSClass("Entity").getMethod("getBukkitEntity"),
+                getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
                 getCBClass("CraftWorld").getMethod("getHandle"),
-                getNMSClass("PlayerConnection").getMethod("sendPacket", getNMSClass("Packet")),
-
-                getNMSClass("EntityPlayer").getField("playerConnection")
+                getMojangClass("server.network.PlayerConnection")
+                    .getMethod("a", getMojangClass("network.protocol.Packet")),
+                getMojangClass("server.level.EntityPlayer").getField("b")
             );
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Failed to create version specific server accessor", e);
@@ -83,9 +68,8 @@ public final class PacketManager1_16_R3 implements PacketManager {
     }
 
     @NotNull
-    private static Class<?> getNMSClass(@NotNull final String className) throws ClassNotFoundException {
-        return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getName().split("\\.")[3]
-            + "." + className);
+    private static Class<?> getMojangClass(@NotNull final String className) throws ClassNotFoundException {
+        return Class.forName("net.minecraft." + className);
     }
 
     @NotNull
@@ -97,11 +81,7 @@ public final class PacketManager1_16_R3 implements PacketManager {
     @NotNull
     @Override
     public Object buildEntitySpawnPacket(@NotNull Object entity) {
-        try {
-            return this.packetPlayOutSpawnEntityLivingConstructor.newInstance(entity);
-        } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException("Failed to create entity spawn packet", e);
-        }
+        return new PacketPlayOutSpawnEntity((EntityLiving) entity);
     }
 
     @NotNull
@@ -110,7 +90,7 @@ public final class PacketManager1_16_R3 implements PacketManager {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
             final Object dataWatcher = this.entityGetDataWatcherMethod.invoke(entity);
-            return this.packetPlayOutEntityMetadataConstructor.newInstance(entityId, dataWatcher, forceUpdateAll);
+            return new PacketPlayOutEntityMetadata(entityId, (DataWatcher) dataWatcher, forceUpdateAll);
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity metadata packet", e);
         }
@@ -118,11 +98,10 @@ public final class PacketManager1_16_R3 implements PacketManager {
 
     @NotNull
     @Override
-    @SuppressWarnings("PrimitiveArrayArgumentToVarargsMethod")
     public Object buildEntityDestroyPacket(@NotNull Object entity) {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
-            return this.packetPlayOutDestroyEntityConstructor.newInstance(new int[]{entityId});
+            return new PacketPlayOutEntityDestroy(entityId);
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity destroy packet", e);
         }
@@ -133,11 +112,9 @@ public final class PacketManager1_16_R3 implements PacketManager {
     public Object buildEntityArmorStand(@NotNull Location location, @NotNull String name) {
         try {
             final World world = location.getWorld();
-            Preconditions.checkArgument(world != null, "provided location did not have a world assigned");
+            final WorldServer worldServer = (WorldServer) this.worldGetHandleMethod.invoke(world);
 
-            final Object worldServer = this.worldGetHandleMethod.invoke(world);
-
-            final Object entityArmorStand = this.entityArmorStandConstructor.newInstance(
+            final Object entityArmorStand = new EntityArmorStand(
                 worldServer,
                 location.getX(), location.getY(), location.getZ()
             );
@@ -146,9 +123,10 @@ public final class PacketManager1_16_R3 implements PacketManager {
             armorStand.setInvisible(true);
             armorStand.setCustomNameVisible(true);
             armorStand.setCustomName(name);
+
             return entityArmorStand;
         } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException("Failed to create entity armor stand", e);
+            throw new NMSAccessException("Failed to create new entity armor stand", e);
         }
     }
 
@@ -159,10 +137,7 @@ public final class PacketManager1_16_R3 implements PacketManager {
             final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
             this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
         } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException(
-                String.format("Failed to queue packet for player %s", player.getUniqueId()),
-                e
-            );
+            throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
         }
     }
 }

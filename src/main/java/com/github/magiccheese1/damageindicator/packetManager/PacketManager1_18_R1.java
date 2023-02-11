@@ -1,9 +1,9 @@
-package com.github.magiccheese1.damageindicator.versions;
+package com.github.magiccheese1.damageindicator.packetManager;
 
 import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
@@ -19,10 +19,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Implementation of the packet manager for the 1.19 minecraft java version.
+ * Implementation of the packet manager for the 1.18 minecraft java version.
  * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
-public final class PacketManager1_19_R1 implements PacketManager {
+public final class PacketManager1_18_R1 implements PacketManager {
 
     private final Method entityGetIdMethod;
     private final Method entityGetDataWatcherMethod;
@@ -33,7 +33,7 @@ public final class PacketManager1_19_R1 implements PacketManager {
 
     private final Field entityPlayerPlayerConnectionField;
 
-    public PacketManager1_19_R1(final @NotNull Method entityGetIdMethod,
+    public PacketManager1_18_R1(final @NotNull Method entityGetIdMethod,
                                 final @NotNull Method entityGetDataWatcherMethod,
                                 final @NotNull Method entityGetHandleMethod,
                                 final @NotNull Method entityGetBukkitEntityMethod,
@@ -50,9 +50,9 @@ public final class PacketManager1_19_R1 implements PacketManager {
     }
 
     @NotNull
-    public static PacketManager1_19_R1 make() {
+    public static PacketManager1_18_R1 make() {
         try {
-            return new PacketManager1_19_R1(
+            return new PacketManager1_18_R1(
                 getMojangClass("world.entity.Entity").getMethod("ae"),
                 getMojangClass("world.entity.Entity").getMethod("ai"),
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
@@ -81,7 +81,7 @@ public final class PacketManager1_19_R1 implements PacketManager {
     @NotNull
     @Override
     public Object buildEntitySpawnPacket(@NotNull Object entity) {
-        return new PacketPlayOutSpawnEntity((EntityLiving) entity);
+        return new PacketPlayOutSpawnEntityLiving((EntityLiving) entity);
     }
 
     @NotNull

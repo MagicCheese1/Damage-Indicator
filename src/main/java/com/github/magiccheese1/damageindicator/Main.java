@@ -1,6 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
-import com.github.magiccheese1.damageindicator.versions.*;
+import com.github.magiccheese1.damageindicator.packetManager.*;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
