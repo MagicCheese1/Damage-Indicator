@@ -1,5 +1,6 @@
 package com.github.magiccheese1.damageindicator.util;
 
+import com.github.magiccheese1.damageindicator.Utility;
 import net.md_5.bungee.api.ChatColor;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +13,7 @@ public class TextUtilityTest {
     public void testBasic() {
         Assert.assertEquals(
             "§x§F§F§F§F§F§F This is white",
-            TextUtility.convertEasyHexToLegacy("§#FFFFFF This is white")
+            Utility.convertEasyHexToLegacy("§#FFFFFF This is white")
         );
     }
 
@@ -20,7 +21,7 @@ public class TextUtilityTest {
     public void testMultiple() {
         Assert.assertEquals(
             "§x§F§F§F§F§F§F White and §x§3§3§F§F§5§7 green",
-            TextUtility.convertEasyHexToLegacy("§#FFFFFF White and §#33FF57 green")
+            Utility.convertEasyHexToLegacy("§#FFFFFF White and §#33FF57 green")
         );
     }
 
@@ -28,7 +29,7 @@ public class TextUtilityTest {
     public void testIgnored() {
         Assert.assertEquals(
             "§#FFFFF White with 5 and #33FF57 green without",
-            TextUtility.convertEasyHexToLegacy("§#FFFFF White with 5 and #33FF57 green without")
+            Utility.convertEasyHexToLegacy("§#FFFFF White with 5 and #33FF57 green without")
         );
     }
 
@@ -36,13 +37,13 @@ public class TextUtilityTest {
     public void testRealConfigValue() {
         Assert.assertEquals(
             "§x§3§3§F§F§5§7-0.#&4❤",
-            TextUtility.convertEasyHexToLegacy("&#33FF57-0.#&4❤")
+            Utility.convertEasyHexToLegacy("&#33FF57-0.#&4❤")
         );
     }
 
     @Test
     public void testInDecimalFormat() {
-        final String postHexConversion = TextUtility.convertEasyHexToLegacy("&#33FF57-0.#&4❤");
+        final String postHexConversion = Utility.convertEasyHexToLegacy("&#33FF57-0.#&4❤");
         final String postChatColourConversion = ChatColor.translateAlternateColorCodes('&', postHexConversion);
 
         final DecimalFormat decimalFormat = new DecimalFormat(postChatColourConversion);

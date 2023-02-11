@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator.util;
+package com.github.magiccheese1.damageindicator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,9 +10,14 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+/**
+ * Provides basic utility functionality.
+ */
 public class Utility {
-
+    private static final Pattern EASY_HEX_PATTERN = Pattern.compile("[§&]#[a-fA-F0-9]{6}");
     public static final String SHOW_DAMAGE_ONLY = "ShowToDamagerOnly";
     public static final String FORMAT_INDICATOR = "IndicatorFormat";
     public static final String CRITICAL_FORMAT = "CriticalIndicatorFormat";
@@ -52,7 +57,34 @@ public class Utility {
         if (stringFormat == null) return Optional.empty();
         DecimalFormat format = ((DecimalFormat) NumberFormat.getNumberInstance(Locale.forLanguageTag(formatLocale)));
         format.applyPattern(
-            ChatColor.translateAlternateColorCodes('&', TextUtility.convertEasyHexToLegacy(stringFormat)));
+            ChatColor.translateAlternateColorCodes('&', convertEasyHexToLegacy(stringFormat)));
         return Optional.of(format);
+    }
+
+    /**
+     * Replaces any occurrence of the easy hex format in the passed string with the legacy minecraft hex colour format.
+     * More specifically, the easy hex format is defined by the colour escape character (§) followed by a hashtag and
+     * six characters defining the hex colour. An example of this would be `§#FFFFFF` for white.
+     * <p>
+     * As a note, the legacy hex format would contain the six hex characters all escaped by a § and prefixed with §x.
+     * An example would be `§x§F§F§F§F§F§F` for white.
+     *
+     * @param easyHexString the source string containing the easy hex colour.
+     *
+     * @return the now fully legacy conform string containing the legacy hex representation.
+     */
+    @NotNull
+    public static String convertEasyHexToLegacy(@NotNull final String easyHexString) {
+        final Matcher matcher = EASY_HEX_PATTERN.matcher(easyHexString);
+        return matcher.replaceAll(r -> {
+            final String group = r.group();
+            final StringBuilder builder = new StringBuilder(14); // 7 chars in total, all escaped.
+            builder.append("§x");
+
+            for (int i = 2; i < 8; i++) {
+                builder.append("§").append(group.charAt(i));
+            }
+            return builder.toString();
+        });
     }
 }
