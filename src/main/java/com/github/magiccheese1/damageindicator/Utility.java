@@ -1,5 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
+import com.github.magiccheese1.damageindicator.config.Options;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,11 +19,6 @@ import java.util.regex.Pattern;
  */
 public class Utility {
     private static final Pattern EASY_HEX_PATTERN = Pattern.compile("[§&]#[a-fA-F0-9]{6}");
-    public static final String SHOW_DAMAGE_ONLY = "ShowToDamagerOnly";
-    public static final String FORMAT_INDICATOR = "IndicatorFormat";
-    public static final String CRITICAL_FORMAT = "CriticalIndicatorFormat";
-    public static final String POISON_FORMAT = "PoisonIndicatorFormat";
-    public static final String INDICATOR_TIME = "IndicatorTime";
 
     /**
      * Determine if the direct hit was a critical hit
@@ -52,7 +48,7 @@ public class Utility {
     public static Optional<DecimalFormat> getConfigurationDamageFormat(@NotNull final FileConfiguration configuration,
                                                                        @NotNull String path) {
         final String stringFormat = configuration.getString(path);
-        final String formatLocale = Optional.ofNullable(configuration.getString("FormatLocale"))
+        final String formatLocale = Optional.ofNullable(configuration.getString(Options.FORMAT_LOCALE))
             .orElse("en-US");
         if (stringFormat == null) return Optional.empty();
         DecimalFormat format = ((DecimalFormat) NumberFormat.getNumberInstance(Locale.forLanguageTag(formatLocale)));

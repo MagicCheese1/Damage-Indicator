@@ -1,5 +1,6 @@
 package com.github.magiccheese1.damageindicator;
 
+import com.github.magiccheese1.damageindicator.config.Options;
 import com.github.magiccheese1.damageindicator.packetManager.PacketManager;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -46,8 +47,8 @@ public class BukkitEventListener implements Listener {
             final FileConfiguration configuration = this.plugin.getConfig();
             newIndicator((LivingEntity) event.getEntity(),
                 plugin.getServer().getPlayer(UUID.fromString(container.get(key, PersistentDataType.STRING))),
-                configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY),
-                Utility.getConfigurationDamageFormat(configuration, Utility.POISON_FORMAT).orElseThrow(
+                configuration.getBoolean(Options.SHOW_DAMAGE_ONLY),
+                Utility.getConfigurationDamageFormat(configuration, Options.POISON_FORMAT).orElseThrow(
                     () -> new IllegalStateException("Plugin configuration did not provide indicator format")),
                 event.getFinalDamage());
         }
@@ -96,7 +97,7 @@ public class BukkitEventListener implements Listener {
         final FileConfiguration configuration = this.plugin.getConfig();
         Player damager = null;
         DecimalFormat damageFormat = Utility.getConfigurationDamageFormat(configuration,
-                Utility.FORMAT_INDICATOR)
+                Options.FORMAT_INDICATOR)
             .orElseThrow(() -> new IllegalStateException("Plugin configuration did not provide indicator " +
                 "format"));
 
@@ -112,7 +113,7 @@ public class BukkitEventListener implements Listener {
                 if (((AbstractArrow) projectile).isCritical()) {
                     damageFormat
                         =
-                        Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
+                        Utility.getConfigurationDamageFormat(configuration, Options.CRITICAL_FORMAT).orElseThrow(
                             () -> new IllegalStateException(
                                 "Plugin configuration did not provide critical indicator format"));
                 }
@@ -128,7 +129,7 @@ public class BukkitEventListener implements Listener {
 
             if (Utility.isCritical(damager)) {
                 damageFormat =
-                    Utility.getConfigurationDamageFormat(configuration, Utility.CRITICAL_FORMAT).orElseThrow(
+                    Utility.getConfigurationDamageFormat(configuration, Options.CRITICAL_FORMAT).orElseThrow(
                         () -> new IllegalStateException(
                             "Plugin configuration did not provide critical indicator format"));
             }
@@ -136,7 +137,7 @@ public class BukkitEventListener implements Listener {
 
         if (damager == null) return; // Could not parse the damaging player from the event.
 
-        newIndicator(entity, damager, configuration.getBoolean(Utility.SHOW_DAMAGE_ONLY), damageFormat,
+        newIndicator(entity, damager, configuration.getBoolean(Options.SHOW_DAMAGE_ONLY), damageFormat,
             event.getFinalDamage());
     }
 
@@ -211,7 +212,7 @@ public class BukkitEventListener implements Listener {
             //Send the destroy packet
             for (final Player recipient : packetRecipients)
                 packetManager.sendPacket(entityDestroyPacket, recipient);
-        }, (long) (this.plugin.getConfig().getDouble(Utility.INDICATOR_TIME, 1.5) * 20));
+        }, (long) (this.plugin.getConfig().getDouble(Options.INDICATOR_TIME, 1.5) * 20));
     }
 
     private int PoisonArrowEffectDuration(PotionData basePotionData) {
