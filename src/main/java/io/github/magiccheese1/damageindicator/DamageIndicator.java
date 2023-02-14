@@ -1,7 +1,7 @@
-package com.github.magiccheese1.damageindicator;
+package io.github.magiccheese1.damageindicator;
 
-import com.github.magiccheese1.damageindicator.packetManager.*;
 import com.tchristofferson.configupdater.ConfigUpdater;
+import io.github.magiccheese1.damageindicator.packetManager.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
-public class Main extends JavaPlugin {
+public class DamageIndicator extends JavaPlugin {
 
     @Override
     public void onEnable() {

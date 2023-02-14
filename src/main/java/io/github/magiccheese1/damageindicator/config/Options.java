@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator.config;
+package io.github.magiccheese1.damageindicator.config;
 
 public class Options {
 

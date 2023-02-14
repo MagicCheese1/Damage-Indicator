@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator.exceptions;
+package io.github.magiccheese1.damageindicator.exceptions;
 
 /**
  * The nms access exception is a runtime exception that should be thrown if access to the server internals, through

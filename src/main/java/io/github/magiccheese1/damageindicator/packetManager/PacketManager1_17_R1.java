@@ -1,6 +1,6 @@
-package com.github.magiccheese1.damageindicator.packetManager;
+package io.github.magiccheese1.damageindicator.packetManager;
 
-import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
+import io.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
@@ -19,10 +19,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Implementation of the packet manager for the 1.18 minecraft java version.
+ * Implementation of the packet manager for the 1.17 minecraft java version.
  * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
-public final class PacketManager1_18_R1 implements PacketManager {
+public final class PacketManager1_17_R1 implements PacketManager {
 
     private final Method entityGetIdMethod;
     private final Method entityGetDataWatcherMethod;
@@ -33,7 +33,7 @@ public final class PacketManager1_18_R1 implements PacketManager {
 
     private final Field entityPlayerPlayerConnectionField;
 
-    public PacketManager1_18_R1(final @NotNull Method entityGetIdMethod,
+    public PacketManager1_17_R1(final @NotNull Method entityGetIdMethod,
                                 final @NotNull Method entityGetDataWatcherMethod,
                                 final @NotNull Method entityGetHandleMethod,
                                 final @NotNull Method entityGetBukkitEntityMethod,
@@ -50,16 +50,16 @@ public final class PacketManager1_18_R1 implements PacketManager {
     }
 
     @NotNull
-    public static PacketManager1_18_R1 make() {
+    public static PacketManager1_17_R1 make() {
         try {
-            return new PacketManager1_18_R1(
-                getMojangClass("world.entity.Entity").getMethod("ae"),
-                getMojangClass("world.entity.Entity").getMethod("ai"),
+            return new PacketManager1_17_R1(
+                getMojangClass("world.entity.Entity").getMethod("getId"),
+                getMojangClass("world.entity.Entity").getMethod("getDataWatcher"),
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
                 getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
                 getCBClass("CraftWorld").getMethod("getHandle"),
                 getMojangClass("server.network.PlayerConnection")
-                    .getMethod("a", getMojangClass("network.protocol.Packet")),
+                    .getMethod("sendPacket", getMojangClass("network.protocol.Packet")),
                 getMojangClass("server.level.EntityPlayer").getField("b")
             );
         } catch (ReflectiveOperationException e) {

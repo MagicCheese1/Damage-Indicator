@@ -1,6 +1,6 @@
-package com.github.magiccheese1.damageindicator;
+package io.github.magiccheese1.damageindicator;
 
-import com.github.magiccheese1.damageindicator.config.Options;
+import io.github.magiccheese1.damageindicator.config.Options;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

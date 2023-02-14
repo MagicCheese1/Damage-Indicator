@@ -1,4 +1,4 @@
-package com.github.magiccheese1.damageindicator;
+package io.github.magiccheese1.damageindicator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,6 +1,5 @@
-package com.github.magiccheese1.damageindicator.util;
+package io.github.magiccheese1.damageindicator;
 
-import com.github.magiccheese1.damageindicator.Utility;
 import net.md_5.bungee.api.ChatColor;
 import org.junit.Assert;
 import org.junit.Test;
