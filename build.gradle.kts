@@ -49,7 +49,7 @@ tasks {
 }
 
 bukkit {
-    main = "com.github.magiccheese1.damageindicator.DamageIndicator"
+    main = "io.github.magiccheese1.damageindicator.DamageIndicator"
     apiVersion = "1.16"
     commands {
         register("damageindicator") {
