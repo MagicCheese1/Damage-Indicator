@@ -99,8 +99,8 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
 
     @Override
     public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value,
-                                          long expirationTime) {
-        return spawnIndicator(findLocation(entity), credit, format, value, expirationTime);
+                                          long lifespan) {
+        return spawnIndicator(findLocation(entity), credit, format, value, lifespan);
     }
 
     @Override
@@ -110,8 +110,8 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     }
 
     @Override
-    public IndicatorEntity spawnIndicator(Location location, Player player, DecimalFormat format, double value) {
-        return spawnIndicator(location, player, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
+    public IndicatorEntity spawnIndicator(Location location, Player credit, DecimalFormat format, double value) {
+        return spawnIndicator(location, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }
 }
