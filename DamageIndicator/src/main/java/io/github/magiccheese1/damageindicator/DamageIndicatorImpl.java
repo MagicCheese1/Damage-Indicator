@@ -2,7 +2,12 @@ package io.github.magiccheese1.damageindicator;
 
 import com.tchristofferson.configupdater.ConfigUpdater;
 import io.github.magiccheese1.damageindicator.config.Options;
-import io.github.magiccheese1.damageindicator.packetManager.*;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_16_R3;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_17_R1;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_18_R1;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R1;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R2;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -10,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -20,7 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static io.github.magiccheese1.damageindicator.config.configUtility.getConfigurationDamageFormat;
+import static io.github.magiccheese1.damageindicator.config.ConfigUtility.getConfigurationDamageFormat;
 
 public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     PacketManager packetManager;
@@ -43,24 +49,12 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         // Get current minecraft version
         final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         switch (serverVersion) {
-            case "v1_16_R3":
-                packetManager = PacketManager1_16_R3.make();
-                break;
-            case "v1_17_R1":
-                packetManager = PacketManager1_17_R1.make();
-                break;
-            case "v1_18_R1":
-            case "v1_18_R2":
-                packetManager = PacketManager1_18_R1.make();
-                break;
-            case "v1_19_R1":
-                packetManager = PacketManager1_19_R1.make();
-                break;
-            case "v1_19_R2":
-                packetManager = PacketManager1_19_R2.make();
-                break;
-            default:
-                throw new RuntimeException("Failed to create version specific server accessor");
+            case "v1_16_R3" -> packetManager = PacketManager1_16_R3.make();
+            case "v1_17_R1" -> packetManager = PacketManager1_17_R1.make();
+            case "v1_18_R1", "v1_18_R2" -> packetManager = PacketManager1_18_R1.make();
+            case "v1_19_R1" -> packetManager = PacketManager1_19_R1.make();
+            case "v1_19_R2" -> packetManager = PacketManager1_19_R2.make();
+            default -> throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this), this);
@@ -81,8 +75,12 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     }
 
     @Override
-    public IndicatorEntity spawnIndicator(Location location, @Nullable Player credit, DecimalFormat format,
-                                          double value, long lifespan) {
+    @NotNull
+    public IndicatorEntity spawnIndicator(@NotNull Location location,
+                                          @Nullable Player credit,
+                                          @NotNull DecimalFormat format,
+                                          double value,
+                                          long lifespan) {
         Collection<Player> visibleTo = new ArrayList<>();
         if (getConfig().getBoolean(Options.SHOW_DAMAGE_ONLY) && credit != null)
             visibleTo.add(credit);
@@ -100,19 +98,31 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     }
 
     @Override
-    public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value,
+    @NotNull
+    public IndicatorEntity spawnIndicator(@NotNull LivingEntity entity,
+                                          @Nullable Player credit,
+                                          @NotNull DecimalFormat format,
+                                          double value,
                                           long lifespan) {
         return spawnIndicator(findLocation(entity), credit, format, value, lifespan);
     }
 
     @Override
-    public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value) {
+    @NotNull
+    public IndicatorEntity spawnIndicator(@NotNull LivingEntity entity,
+                                          @Nullable Player credit,
+                                          @NotNull DecimalFormat format,
+                                          double value) {
         return spawnIndicator(entity, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }
 
     @Override
-    public IndicatorEntity spawnIndicator(Location location, Player credit, DecimalFormat format, double value) {
+    @NotNull
+    public IndicatorEntity spawnIndicator(@NotNull Location location,
+                                          @Nullable Player credit,
+                                          @NotNull DecimalFormat format,
+                                          double value) {
         return spawnIndicator(location, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }

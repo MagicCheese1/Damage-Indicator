@@ -1,12 +1,11 @@
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1" // Generates plugin.yml
+    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3" // Generates plugin.yml
 }
 
 group = "io.github.magiccheese1"
 version = "1.3.6-SNAPSHOT"
-
 
 repositories {
     mavenCentral()
@@ -15,12 +14,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.tchristofferson:ConfigUpdater:1.2-SNAPSHOT")
+    implementation("com.tchristofferson:ConfigUpdater:2.0-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:22.0.0")
     compileOnly("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
     implementation(project(":API"))
 
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
 }
 tasks {
@@ -30,7 +29,7 @@ tasks {
     shadowJar {
         relocate("com.tchristofferson.ConfigUpdater", "io.github.magiccheese1.damageindicator.ConfigUpdater")
     }
-    jar {
+    build {
         dependsOn(shadowJar)
     }
 }

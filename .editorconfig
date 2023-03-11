@@ -30,3 +30,6 @@ ij_java_doc_do_not_wrap_if_one_line = true
 ij_java_wrap_comments = true
 ij_java_wrap_long_lines = true
 ij_java_insert_override_annotation = true
+ij_java_packages_to_use_import_on_demand = 999999999
+ij_java_class_count_to_use_import_on_demand = 99999999
+ij_java_names_count_to_use_import_on_demand = 99999999

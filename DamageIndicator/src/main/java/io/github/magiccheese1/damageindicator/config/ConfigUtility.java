@@ -12,9 +12,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Provides basic utility functionality for parsing .
+ * Provides basic utility functionality for configuration.
  */
-public class configUtility {
+public class ConfigUtility {
     private static final Pattern EASY_HEX_PATTERN = Pattern.compile("[§&]#[a-fA-F0-9]{6}");
 
     /**

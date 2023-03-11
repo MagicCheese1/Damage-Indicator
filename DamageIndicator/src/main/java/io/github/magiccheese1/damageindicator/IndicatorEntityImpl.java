@@ -14,7 +14,7 @@ import java.util.Collection;
 
 
 /**
- * Object for representing Indicators.
+ * Object for representing indicators.
  * use {@link DamageIndicatorImpl#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} for spawning a new one.
  * IndicatorEntity is not an actual minecraft entity. DamageIndicator uses fake entities that only exist in the clients
  * world.

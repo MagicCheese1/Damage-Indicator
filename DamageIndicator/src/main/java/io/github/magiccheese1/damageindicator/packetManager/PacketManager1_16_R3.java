@@ -154,22 +154,18 @@ public final class PacketManager1_16_R3 implements PacketManager {
     }
 
     @Override
-    public void sendPacket(@NotNull Object packet, @NotNull Player player) {
-        try {
-            final Object handle = this.entityGetHandleMethod.invoke(player);
-            final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
-            this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
-        } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException(
-                String.format("Failed to queue packet for player %s", player.getUniqueId()),
-                e
-            );
-        }
-    }
-
-    @Override
     public void sendPacket(@NotNull Object packet, Collection<Player> players) {
-        for (Player player : players)
-            sendPacket(packet, player);
+        for (Player player : players) {
+            try {
+                final Object handle = this.entityGetHandleMethod.invoke(player);
+                final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
+                this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
+            } catch (final ReflectiveOperationException e) {
+                throw new NMSAccessException(
+                    String.format("Failed to queue packet for player %s", player.getUniqueId()),
+                    e
+                );
+            }
+        }
     }
 }

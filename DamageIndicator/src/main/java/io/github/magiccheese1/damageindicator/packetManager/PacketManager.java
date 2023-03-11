@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Abstraction interface representing any form of interaction with the server internal implementation.
@@ -88,7 +89,9 @@ public interface PacketManager {
      * @param packet the server internal representation of the packet that should be send to the player.
      * @param player the player instance that is going to receive the packet.
      */
-    void sendPacket(@NotNull Object packet, @NotNull Player player);
+    default void sendPacket(@NotNull Object packet, @NotNull Player player) {
+        this.sendPacket(packet, List.of(player));
+    }
 
     void sendPacket(@NotNull Object packet, Collection<Player> players);
 
