@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * Implementation of the packet manager for the 1.16 minecraft java version.
@@ -164,5 +165,11 @@ public final class PacketManager1_16_R3 implements PacketManager {
                 e
             );
         }
+    }
+
+    @Override
+    public void sendPacket(@NotNull Object packet, Collection<Player> players) {
+        for (Player player : players)
+            sendPacket(packet, player);
     }
 }

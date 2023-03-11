@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -152,4 +153,11 @@ public final class PacketManager1_19_R2 implements PacketManager {
             throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
         }
     }
+
+    @Override
+    public void sendPacket(@NotNull Object packet, Collection<Player> players) {
+        for (Player player : players)
+            sendPacket(packet, player);
+    }
+
 }

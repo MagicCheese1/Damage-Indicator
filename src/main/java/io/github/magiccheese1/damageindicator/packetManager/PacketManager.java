@@ -5,6 +5,8 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+
 /**
  * Abstraction interface representing any form of interaction with the server internal implementation.
  * As the server implementation may differ between minecraft releases, this interface is implemented for each supported
@@ -87,4 +89,7 @@ public interface PacketManager {
      * @param player the player instance that is going to receive the packet.
      */
     void sendPacket(@NotNull Object packet, @NotNull Player player);
+
+    void sendPacket(@NotNull Object packet, Collection<Player> players);
+
 }

@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * Implementation of the packet manager for the 1.18 minecraft java version.
@@ -139,5 +140,11 @@ public final class PacketManager1_18_R1 implements PacketManager {
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
         }
+    }
+
+    @Override
+    public void sendPacket(@NotNull Object packet, Collection<Player> players) {
+        for (Player player : players)
+            sendPacket(packet, player);
     }
 }
