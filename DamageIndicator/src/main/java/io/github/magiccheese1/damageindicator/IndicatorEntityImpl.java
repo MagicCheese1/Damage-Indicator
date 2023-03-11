@@ -15,11 +15,11 @@ import java.util.Collection;
 
 /**
  * Object for representing Indicators.
- * use {@link DamageIndicator#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} for spawning a new one.
+ * use {@link DamageIndicatorImpl#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} for spawning a new one.
  * IndicatorEntity is not an actual minecraft entity. DamageIndicator uses fake entities that only exist in the clients
  * world.
  */
-public class IndicatorEntity {
+public class IndicatorEntityImpl implements IndicatorEntity {
     private final Plugin plugin;
     private final PacketManager packetManager;
     private final Location location;
@@ -33,11 +33,11 @@ public class IndicatorEntity {
     /**
      * Use {@link #spawn()} to show indicator to players.
      * Creating a IndicatorEntity with
-     * {@link DamageIndicator#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} preferred.
+     * {@link DamageIndicatorImpl#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} preferred.
      */
-    public IndicatorEntity(Plugin plugin, PacketManager packetManager, Location location, double value,
-                           DecimalFormat format,
-                           Collection<Player> visibleTo) {
+    public IndicatorEntityImpl(Plugin plugin, PacketManager packetManager, Location location, double value,
+                               DecimalFormat format,
+                               Collection<Player> visibleTo) {
         this.plugin = plugin;
         this.packetManager = packetManager;
         this.location = location;
@@ -46,11 +46,7 @@ public class IndicatorEntity {
         this.visibleTo = visibleTo;
     }
 
-    /**
-     * Use {@link #spawn()} to show indicator to players.
-     * Creating a IndicatorEntity with
-     * {@link DamageIndicator#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} preferred.
-     */
+    @Override
     public void spawn() {
         armorstandEntity = packetManager.buildEntityArmorStand(getLocation(), getFormat().format(value));
 
@@ -63,36 +59,30 @@ public class IndicatorEntity {
         alive = true;
     }
 
+    @Override
     public double getValue() {
         return value;
     }
 
+    @Override
     @NotNull
     public Location getLocation() {
         return location;
     }
 
+    @Override
     @NotNull
     public DecimalFormat getFormat() {
         return format;
     }
 
 
-    /**
-     * This method schedules the destruction of the Indicator.
-     *
-     * @param tickDelay The destruction delay in ticks
-     *
-     * @return the created BukkitTask. use {@link BukkitTask#cancel()} to cancel destruction
-     */
+    @Override
     public BukkitTask scheduleDestroy(long tickDelay) {
         return Bukkit.getScheduler().runTaskLater(this.plugin, this::destroy, tickDelay);
     }
 
-    /**
-     * This method destroys the Indicator on the client.
-     * The Indicator can be spawned again.
-     */
+    @Override
     public void destroy() {
         final Object entityDestroyPacket = packetManager.buildEntityDestroyPacket(armorstandEntity);
 
@@ -101,10 +91,12 @@ public class IndicatorEntity {
         alive = false;
     }
 
+    @Override
     public Collection<Player> getVisibleTo() {
         return visibleTo;
     }
 
+    @Override
     public boolean isAlive() {
         return alive;
     }

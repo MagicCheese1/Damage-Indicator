@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class DamageIndicator extends JavaPlugin {
+public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     PacketManager packetManager;
 
     @Override
@@ -61,6 +62,8 @@ public class DamageIndicator extends JavaPlugin {
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
         getServer().getPluginManager().registerEvents(new BukkitEventListener(this), this);
+
+        getServer().getServicesManager().register(DamageIndicator.class, this, this, ServicePriority.Normal);
     }
 
     private static Location findLocation(Entity entity) {
@@ -75,20 +78,7 @@ public class DamageIndicator extends JavaPlugin {
         return entity.getLocation();
     }
 
-    /**
-     * Function for spawning a DamageIndicator.
-     *
-     * @param location Where to spawn the Indicator.
-     * @param credit   The player that has dealt the damage. (see ShowToDamagerOnly in config)
-     * @param format   The format to show the damage in.
-     * @param value    The amount of damage that was dealt.
-     * @param lifespan How long the Indicator will be visible for. If lifespan is 0, it will not be destroyed
-     *                 automatically. NOTICE: The Indicator is not guaranteed to be visible for anyone who rejoined
-     *                 the server or was far away when it was spawned. The Indicators are not meant to work like
-     *                 holograms.
-     *
-     * @return the Indicator Object.
-     */
+    @Override
     public IndicatorEntity spawnIndicator(Location location, @Nullable Player credit, DecimalFormat format,
                                           double value, long lifespan) {
         Collection<Player> visibleTo = new ArrayList<>();
@@ -100,23 +90,26 @@ public class DamageIndicator extends JavaPlugin {
                 if (entity instanceof Player)
                     visibleTo.add((Player) entity);
         }
-        IndicatorEntity indicator = new IndicatorEntity(this, packetManager, location, value, format, visibleTo);
+        IndicatorEntity indicator = new IndicatorEntityImpl(this, packetManager, location, value, format, visibleTo);
         indicator.spawn();
         if (lifespan != 0)
             indicator.scheduleDestroy(lifespan);
         return indicator;
     }
 
+    @Override
     public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value,
                                           long expirationTime) {
         return spawnIndicator(findLocation(entity), credit, format, value, expirationTime);
     }
 
+    @Override
     public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value) {
         return spawnIndicator(entity, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }
 
+    @Override
     public IndicatorEntity spawnIndicator(Location location, Player player, DecimalFormat format, double value) {
         return spawnIndicator(location, player, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);

@@ -25,10 +25,10 @@ import static io.github.magiccheese1.damageindicator.config.configUtility.getCon
 
 public class BukkitEventListener implements Listener {
 
-    private final DamageIndicator damageIndicator;
+    private final DamageIndicatorImpl damageIndicator;
     private final NamespacedKey key;
 
-    public BukkitEventListener(@NotNull final DamageIndicator damageIndicator) {
+    public BukkitEventListener(@NotNull final DamageIndicatorImpl damageIndicator) {
         this.damageIndicator = damageIndicator;
         this.key = new NamespacedKey(damageIndicator, "poisoned-by");
     }
