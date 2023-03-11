@@ -77,10 +77,6 @@ public class IndicatorEntity {
         return format;
     }
 
-    public void teleport(Location location) {
-        //...
-    }
-
 
     /**
      * This method schedules the destruction of the Indicator.
