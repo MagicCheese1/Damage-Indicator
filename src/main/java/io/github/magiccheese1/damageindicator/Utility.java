@@ -4,6 +4,7 @@ import io.github.magiccheese1.damageindicator.config.Options;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,5 +83,18 @@ public class Utility {
             }
             return builder.toString();
         });
+    }
+
+
+    public static int poisonArrowEffectDuration(PotionData basePotionData) {
+        if (basePotionData.isUpgraded()) return 54;
+        if (basePotionData.isExtended()) return 225;
+        return 112;
+    }
+
+    public static int poisonLingeringPotionEffectDuration(PotionData basePotionData) {
+        if (basePotionData.isUpgraded()) return 108;
+        if (basePotionData.isExtended()) return 450;
+        return 225;
     }
 }
