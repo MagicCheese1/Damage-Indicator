@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Provides basic utility functionality for parsing .
  */
-public class configUtility {
+public class ConfigUtility {
     private static final Pattern EASY_HEX_PATTERN = Pattern.compile("[§&]#[a-fA-F0-9]{6}");
 
     /**

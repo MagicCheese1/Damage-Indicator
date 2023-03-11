@@ -6,7 +6,7 @@ subprojects {
     apply(plugin = "java")
 
     tasks.withType<JavaCompile> {
-        options.encoding = "UTF-8"
+        options.encoding = Charsets.UTF_8.name()
     }
 
     configure<JavaPluginExtension> {

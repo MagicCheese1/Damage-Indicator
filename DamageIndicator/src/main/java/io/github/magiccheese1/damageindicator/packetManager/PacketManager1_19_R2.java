@@ -85,7 +85,7 @@ public final class PacketManager1_19_R2 implements PacketManager {
     @NotNull
     private static Class<?> getCBClass(@NotNull final String className) throws ClassNotFoundException {
         return Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getName().split("\\.")[3]
-            + "." + className);
+                             + "." + className);
     }
 
     @NotNull
@@ -100,10 +100,10 @@ public final class PacketManager1_19_R2 implements PacketManager {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
             final Object synchedEntityData = this.entityGetDataMethod.invoke(entity);
-//            return new PacketPlayOutEntityMetadata(entityId, this.synchedEntityDataGetDirtyMethod.invoke
-//            (synchedEntityData));
-            return this.clientboundSetEntityDataPacketInit.newInstance(entityId,
-                this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
+            return this.clientboundSetEntityDataPacketInit.newInstance(
+                entityId,
+                this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData)
+            );
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity metadata packet", e);
         }
@@ -144,20 +144,19 @@ public final class PacketManager1_19_R2 implements PacketManager {
     }
 
     @Override
-    public void sendPacket(@NotNull Object packet, @NotNull Player player) {
-        try {
-            final Object handle = this.entityGetHandleMethod.invoke(player);
-            final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
-            this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
-        } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
-        }
-    }
-
-    @Override
     public void sendPacket(@NotNull Object packet, Collection<Player> players) {
-        for (Player player : players)
-            sendPacket(packet, player);
+        for (Player player : players) {
+            try {
+                final Object handle = this.entityGetHandleMethod.invoke(player);
+                final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
+                this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
+            } catch (final ReflectiveOperationException e) {
+                throw new NMSAccessException(
+                    String.format("Failed to queue packet for player %s", player.getUniqueId()),
+                    e
+                );
+            }
+        }
     }
 
 }

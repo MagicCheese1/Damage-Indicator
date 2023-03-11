@@ -10,7 +10,9 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 
 /**
- * Use {@link DamageIndicator#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} to spawn an Indicator
+ * Represents a temporary entity used for displaying a damage indication to a player in the world.
+ * <p>
+ * Use {@link DamageIndicator#spawnIndicator(LivingEntity, Player, DecimalFormat, double)} to spawn an indicator.
  */
 public interface IndicatorEntity {
 

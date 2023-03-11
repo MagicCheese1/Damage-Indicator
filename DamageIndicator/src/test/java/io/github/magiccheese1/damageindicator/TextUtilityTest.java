@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.text.DecimalFormat;
 
-import static io.github.magiccheese1.damageindicator.config.configUtility.convertEasyHexToLegacy;
+import static io.github.magiccheese1.damageindicator.config.ConfigUtility.convertEasyHexToLegacy;
 
 public class TextUtilityTest {
 
