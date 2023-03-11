@@ -60,7 +60,7 @@ public class DamageIndicator extends JavaPlugin {
                 throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
-        getServer().getPluginManager().registerEvents(new BukkitEventListener(this, packetManager), this);
+        getServer().getPluginManager().registerEvents(new BukkitEventListener(this), this);
     }
 
     private static Location findLocation(Entity entity) {

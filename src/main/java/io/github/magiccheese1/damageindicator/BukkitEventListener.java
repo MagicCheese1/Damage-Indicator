@@ -1,7 +1,6 @@
 package io.github.magiccheese1.damageindicator;
 
 import io.github.magiccheese1.damageindicator.config.Options;
-import io.github.magiccheese1.damageindicator.packetManager.PacketManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
@@ -27,13 +26,10 @@ import static io.github.magiccheese1.damageindicator.config.configUtility.getCon
 public class BukkitEventListener implements Listener {
 
     private final DamageIndicator damageIndicator;
-    private final PacketManager packetManager;
     private final NamespacedKey key;
 
-    public BukkitEventListener(@NotNull final DamageIndicator damageIndicator,
-                               @NotNull final PacketManager packetManager) {
+    public BukkitEventListener(@NotNull final DamageIndicator damageIndicator) {
         this.damageIndicator = damageIndicator;
-        this.packetManager = packetManager;
         this.key = new NamespacedKey(damageIndicator, "poisoned-by");
     }
 
