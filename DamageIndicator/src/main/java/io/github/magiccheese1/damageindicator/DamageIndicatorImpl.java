@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static io.github.magiccheese1.damageindicator.config.configUtility.getConfigurationDamageFormat;
+
 public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
     PacketManager packetManager;
 
@@ -114,4 +116,24 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         return spawnIndicator(location, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }
+
+    @Override
+    public DecimalFormat getDamageFormat() {
+        return getConfigurationDamageFormat(getConfig(), Options.FORMAT_INDICATOR).orElseThrow(
+            () -> new IllegalStateException("Plugin configuration did not provide indicator format"));
+    }
+
+    @Override
+    public DecimalFormat getCriticalDamageFormat() {
+        return getConfigurationDamageFormat(getConfig(), Options.CRITICAL_FORMAT).orElseThrow(
+            () -> new IllegalStateException("Plugin configuration did not provide indicator format"));
+    }
+
+    @Override
+    public DecimalFormat getPoisonDamageFormat() {
+        return getConfigurationDamageFormat(getConfig(), Options.POISON_FORMAT).orElseThrow(
+            () -> new IllegalStateException("Plugin configuration did not provide indicator format"));
+    }
+
+
 }

@@ -65,4 +65,10 @@ public interface DamageIndicator {
      * @return the Indicator Object.
      */
     IndicatorEntity spawnIndicator(Location location, Player credit, DecimalFormat format, double value);
+
+    DecimalFormat getDamageFormat();
+
+    DecimalFormat getCriticalDamageFormat();
+
+    DecimalFormat getPoisonDamageFormat();
 }
