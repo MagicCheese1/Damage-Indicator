@@ -75,8 +75,22 @@ public class DamageIndicator extends JavaPlugin {
         return entity.getLocation();
     }
 
+    /**
+     * Function for spawning a DamageIndicator.
+     *
+     * @param location Where to spawn the Indicator.
+     * @param credit   The player that has dealt the damage. (see ShowToDamagerOnly in config)
+     * @param format   The format to show the damage in.
+     * @param value    The amount of damage that was dealt.
+     * @param lifespan How long the Indicator will be visible for. If lifespan is 0, it will not be destroyed
+     *                 automatically. NOTICE: The Indicator is not guaranteed to be visible for anyone who rejoined
+     *                 the server or was far away when it was spawned. The Indicators are not meant to work like
+     *                 holograms.
+     *
+     * @return the Indicator Object.
+     */
     public IndicatorEntity spawnIndicator(Location location, @Nullable Player credit, DecimalFormat format,
-                                          double value) {
+                                          double value, long lifespan) {
         Collection<Player> visibleTo = new ArrayList<>();
         if (getConfig().getBoolean(Options.SHOW_DAMAGE_ONLY) && credit != null)
             visibleTo.add(credit);
@@ -88,11 +102,23 @@ public class DamageIndicator extends JavaPlugin {
         }
         IndicatorEntity indicator = new IndicatorEntity(this, packetManager, location, value, format, visibleTo);
         indicator.spawn();
-        indicator.scheduleDestroy((long) getConfig().getDouble(Options.INDICATOR_TIME, 1.5) * 20);
+        if (lifespan != 0)
+            indicator.scheduleDestroy(lifespan);
         return indicator;
     }
 
+    public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value,
+                                          long expirationTime) {
+        return spawnIndicator(findLocation(entity), credit, format, value, expirationTime);
+    }
+
     public IndicatorEntity spawnIndicator(LivingEntity entity, Player credit, DecimalFormat format, double value) {
-        return spawnIndicator(findLocation(entity), credit, format, value);
+        return spawnIndicator(entity, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
+            1.5) * 20);
+    }
+
+    public IndicatorEntity spawnIndicator(Location location, Player player, DecimalFormat format, double value) {
+        return spawnIndicator(location, player, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
+            1.5) * 20);
     }
 }
