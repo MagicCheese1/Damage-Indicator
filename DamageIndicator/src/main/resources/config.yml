@@ -1,21 +1,3 @@
-# Damage Indicator
-
-This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds indicators that show how much damage you dealt to an entity.
-![](/images/dmgindicatorscreen.png)
-
-## Installing
-
-1. Download the newest release from the [releases page](https://github.com/MagicCheese1/Damage-Indicator/releases)
-
-2. Put the downloaded jar in your plugins folder
-
-3. Enjoy
-
-## Configuration
-
-You can find the config file at \plugins\DamageIndicator\config.yml. By default it should look like this:
-
-```yaml
 ## Should the indicator be shown to everyone(true) or just the player who dealt the damage(false)
 ShowToDamagerOnly: true
 
@@ -41,20 +23,3 @@ FormatLocale: "en-US"
 
 ## For how long an indicator should be shown. (Use seconds)
 IndicatorTime: 1.5
-
-```
-
-## Commands and permissions
-
-`/damageindicator reload` reloads the config. requires `Damageindicator.admin` 
-
-
-## Building
-
-2. Clone this repo
-3. open a terminal and type `gradlew build`
-4. The jar file is at /build/libs/DamageIndicator.jar
-
-## License
-
-This repo is licensed under the [MIT LICENSE](/LICENSE)
