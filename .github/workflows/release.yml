@@ -42,14 +42,20 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
 
-      - name: Rename output file
+      - name: Rename impl output file
         if: startsWith(github.ref, 'refs/tags/')
-        run: find ./build/libs/ -type f -name '*-all.jar' -print0 -quit | xargs --null -I{} mv {} "./build/libs/DamageIndicator.jar"
+        run: find ./DamageIndicator/build/libs/ -type f -name '*-all.jar' -print0 -quit | xargs --null -I{} mv {} "./DamageIndicator/build/libs/DamageIndicator.jar"
+
+      - name: Rename API output file
+        if: startsWith(github.ref, 'refs/tags/')
+        run: find ./API/build/libs/ -type f -name '*-all.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API.jar"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: build/libs/DamageIndicator.jar
+          files: |
+            DamageIndicator/build/libs/DamageIndicator.jar
+            API/build/libs/DamageIndicator-API.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
