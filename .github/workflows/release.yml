@@ -48,7 +48,7 @@ jobs:
 
       - name: Rename API-Javadoc output file
         if: startsWith(github.ref, 'refs/tags/')
-        run: find ./API/build/libs/ -type f -name '*-javadocs.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API-javadoc.jar"
+        run: find ./API/build/libs/ -type f -name '*-javadoc.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API-javadoc.jar"
 
       - name: Rename API-sources output file
         if: startsWith(github.ref, 'refs/tags/')
