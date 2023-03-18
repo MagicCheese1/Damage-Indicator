@@ -46,9 +46,19 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: find ./DamageIndicator/build/libs/ -type f -name '*-all.jar' -print0 -quit | xargs --null -I{} mv {} "./DamageIndicator/build/libs/DamageIndicator.jar"
 
+      - name: Rename API-Javadoc output file
+        if: startsWith(github.ref, 'refs/tags/')
+        run: find ./API/build/libs/ -type f -name '*-javadocs.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API-javadoc.jar"
+
+      - name: Rename API-sources output file
+        if: startsWith(github.ref, 'refs/tags/')
+        run: find ./API/build/libs/ -type f -name '*-sources.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API-sources.jar"
+
       - name: Rename API output file
         if: startsWith(github.ref, 'refs/tags/')
-        run: find ./API/build/libs/ -type f -name '*-all.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API.jar"
+        run: find ./API/build/libs/ -type f -name '*.jar' -print0 -quit | xargs --null -I{} mv {} "./API/build/libs/DamageIndicator-API.jar"
+
+
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -57,5 +67,8 @@ jobs:
           files: |
             DamageIndicator/build/libs/DamageIndicator.jar
             API/build/libs/DamageIndicator-API.jar
+            API/build/libs/DamageIndicator-API-javadoc.jar
+            API/build/libs/DamageIndicator-API-sources.jar
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
