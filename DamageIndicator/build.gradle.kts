@@ -4,9 +4,6 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3" // Generates plugin.yml
 }
 
-group = "io.github.magiccheese1"
-version = "1.3.6-SNAPSHOT"
-
 repositories {
     mavenCentral()
     mavenLocal()

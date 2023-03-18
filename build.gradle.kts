@@ -1,8 +1,6 @@
-
-group = "io.github.magiccheese1"
-version = "1.3.6-SNAPSHOT"
-
 subprojects {
+    group = "io.github.magiccheese1"
+    version = "2.0.0-SNAPSHOT"
     apply(plugin = "java")
 
     tasks.withType<JavaCompile> {
