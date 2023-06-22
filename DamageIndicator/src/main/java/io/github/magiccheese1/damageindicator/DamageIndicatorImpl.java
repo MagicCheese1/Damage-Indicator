@@ -8,6 +8,7 @@ import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_17_R1
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_18_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R2;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -54,6 +55,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             case "v1_18_R1", "v1_18_R2" -> packetManager = PacketManager1_18_R1.make();
             case "v1_19_R1" -> packetManager = PacketManager1_19_R1.make();
             case "v1_19_R2" -> packetManager = PacketManager1_19_R2.make();
+            case "v1_20_R1" -> packetManager = PacketManager1_20_R1.make();
             default -> throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
