@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.magiccheese1"
-version = "1.3.8-SNAPSHOT"
+version = "1.3.8"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(16))
