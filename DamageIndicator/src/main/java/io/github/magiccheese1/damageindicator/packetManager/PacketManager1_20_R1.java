@@ -1,6 +1,6 @@
-package com.github.magiccheese1.damageindicator.versions;
+package io.github.magiccheese1.damageindicator.packetManager;
 
-import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
+import io.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.server.level.WorldServer;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -140,13 +141,19 @@ public final class PacketManager1_20_R1 implements PacketManager {
     }
 
     @Override
-    public void sendPacket(@NotNull Object packet, @NotNull Player player) {
-        try {
-            final Object handle = this.entityGetHandleMethod.invoke(player);
-            final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
-            this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
-        } catch (final ReflectiveOperationException e) {
-            throw new NMSAccessException(String.format("Failed to send packet to player %s", player.getUniqueId()), e);
+    public void sendPacket(@NotNull Object packet, Collection<Player> players) {
+        for (Player player : players) {
+            try {
+                final Object handle = this.entityGetHandleMethod.invoke(player);
+                final Object playerConnection = this.entityPlayerPlayerConnectionField.get(handle);
+                this.playerConnectionSendPacketMethod.invoke(playerConnection, packet);
+            } catch (final ReflectiveOperationException e) {
+                throw new NMSAccessException(
+                    String.format("Failed to queue packet for player %s", player.getUniqueId()),
+                    e
+                );
+            }
         }
     }
+
 }
