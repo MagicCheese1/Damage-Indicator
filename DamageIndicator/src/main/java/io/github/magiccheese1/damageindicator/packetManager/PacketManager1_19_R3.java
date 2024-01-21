@@ -19,10 +19,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * Implementation of the packet manager for the 1.20 minecraft java version.
+ * Implementation of the packet manager for the 1.19 minecraft java version.
  * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
-public final class PacketManager1_20_R1 implements PacketManager {
+public final class PacketManager1_19_R3 implements PacketManager {
 
     private final Method entityGetIdMethod;
     private final Method entityGetHandleMethod;
@@ -35,7 +35,7 @@ public final class PacketManager1_20_R1 implements PacketManager {
     private final Field entityPlayerPlayerConnectionField;
 
 
-    public PacketManager1_20_R1(final @NotNull Method entityGetIdMethod,
+    public PacketManager1_19_R3(final @NotNull Method entityGetIdMethod,
                                 final @NotNull Method entityGetHandleMethod,
                                 final @NotNull Method entityGetBukkitEntityMethod,
                                 final @NotNull Method worldGetHandleMethod,
@@ -56,9 +56,9 @@ public final class PacketManager1_20_R1 implements PacketManager {
     }
 
     @NotNull
-    public static PacketManager1_20_R1 make() {
+    public static PacketManager1_19_R3 make() {
         try {
-            return new PacketManager1_20_R1(
+            return new PacketManager1_19_R3(
                 getMojangClass("world.entity.Entity").getMethod("af"),
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
                 getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
@@ -68,7 +68,7 @@ public final class PacketManager1_20_R1 implements PacketManager {
                 getMojangClass("world.entity.Entity").getMethod("aj"),
                 getMojangClass("network.syncher.DataWatcher").getMethod("b"),
                 getMojangClass("network.protocol.game.PacketPlayOutEntityMetadata").getConstructor(int.class, List.class),
-                getMojangClass("server.level.EntityPlayer").getField("c")
+                getMojangClass("server.level.EntityPlayer").getField("b")
             );
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Failed to create version specific server accessor", e);

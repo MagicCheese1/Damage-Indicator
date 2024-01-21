@@ -4,7 +4,7 @@ import com.github.magiccheese1.damageindicator.exceptions.NMSAccessException;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,10 +19,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * Implementation of the packet manager for the 1.20 minecraft java version.
+ * Implementation of the packet manager for the 1.20.2 minecraft java version.
  * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
-public final class PacketManager1_20_R1 implements PacketManager {
+public final class PacketManager1_20_R3 implements PacketManager {
 
     private final Method entityGetIdMethod;
     private final Method entityGetHandleMethod;
@@ -35,7 +35,7 @@ public final class PacketManager1_20_R1 implements PacketManager {
     private final Field entityPlayerPlayerConnectionField;
 
 
-    public PacketManager1_20_R1(final @NotNull Method entityGetIdMethod,
+    public PacketManager1_20_R3(final @NotNull Method entityGetIdMethod,
                                 final @NotNull Method entityGetHandleMethod,
                                 final @NotNull Method entityGetBukkitEntityMethod,
                                 final @NotNull Method worldGetHandleMethod,
@@ -56,18 +56,19 @@ public final class PacketManager1_20_R1 implements PacketManager {
     }
 
     @NotNull
-    public static PacketManager1_20_R1 make() {
+    public static PacketManager1_20_R3 make() {
         try {
-            return new PacketManager1_20_R1(
-                getMojangClass("world.entity.Entity").getMethod("af"),
+            return new PacketManager1_20_R3(
+                getMojangClass("world.entity.Entity").getMethod("aj"),
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
                 getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
                 getCBClass("CraftWorld").getMethod("getHandle"),
-                getMojangClass("server.network.PlayerConnection")
-                    .getMethod("a", getMojangClass("network.protocol.Packet")),
-                getMojangClass("world.entity.Entity").getMethod("aj"),
+                getMojangClass("server.network.ServerCommonPacketListenerImpl")
+                    .getMethod("b", getMojangClass("network.protocol.Packet")),
+                getMojangClass("world.entity.Entity").getMethod("an"),
                 getMojangClass("network.syncher.DataWatcher").getMethod("b"),
-                getMojangClass("network.protocol.game.PacketPlayOutEntityMetadata").getConstructor(int.class, List.class),
+                getMojangClass("network.protocol.game.PacketPlayOutEntityMetadata").getConstructor(int.class,
+                    List.class),
                 getMojangClass("server.level.EntityPlayer").getField("c")
             );
         } catch (ReflectiveOperationException e) {
@@ -89,7 +90,7 @@ public final class PacketManager1_20_R1 implements PacketManager {
     @NotNull
     @Override
     public Object buildEntitySpawnPacket(@NotNull Object entity) {
-        return new PacketPlayOutSpawnEntity((EntityLiving) entity);
+        return new PacketPlayOutSpawnEntity((Entity) entity);
     }
 
     @NotNull
@@ -98,8 +99,8 @@ public final class PacketManager1_20_R1 implements PacketManager {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
             final Object synchedEntityData = this.entityGetDataMethod.invoke(entity);
-//            return new PacketPlayOutEntityMetadata(entityId, this.synchedEntityDataGetDirtyMethod.invoke(synchedEntityData));
-            return this.clientboundSetEntityDataPacketInit.newInstance(entityId, this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
+            return this.clientboundSetEntityDataPacketInit.newInstance(entityId,
+                this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity metadata packet", e);
         }
