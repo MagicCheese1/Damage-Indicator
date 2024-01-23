@@ -3,6 +3,7 @@ package io.github.magiccheese1.damageindicator;
 import io.github.magiccheese1.damageindicator.config.Options;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -35,32 +36,48 @@ import static io.github.magiccheese1.damageindicator.config.ConfigUtility.getCon
 public class BukkitEventListener implements Listener {
 
     private final DamageIndicatorImpl damageIndicator;
-    private final NamespacedKey key;
+    private final NamespacedKey poisonedByKey;
+    private final NamespacedKey burnedByKey;
 
     public BukkitEventListener(@NotNull final DamageIndicatorImpl damageIndicator) {
         this.damageIndicator = damageIndicator;
-        this.key = new NamespacedKey(damageIndicator, "poisoned-by");
+        this.poisonedByKey = new NamespacedKey(damageIndicator, "poisoned-by");
+        this.burnedByKey = new NamespacedKey(damageIndicator, "burned-by");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void entityDamage(EntityDamageEvent event) {
-        if (event.getCause() != EntityDamageEvent.DamageCause.POISON) return;
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
 
         PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
-        if (!container.has(key, PersistentDataType.STRING)) return;
+        if (container.has(poisonedByKey, PersistentDataType.STRING) && event.getCause() == EntityDamageEvent.DamageCause.POISON) {
 
-        final FileConfiguration configuration = this.damageIndicator.getConfig();
-        DecimalFormat poisonFormat = getConfigurationDamageFormat(configuration, Options.POISON_FORMAT).orElseThrow(
-            () -> new IllegalStateException("Plugin configuration did not provide indicator format")
-        );
+            final FileConfiguration configuration = this.damageIndicator.getConfig();
+            DecimalFormat poisonFormat = getConfigurationDamageFormat(configuration, Options.POISON_FORMAT).orElseThrow(
+                () -> new IllegalStateException("Plugin configuration did not provide indicator format")
+            );
 
-        damageIndicator.spawnIndicator(
-            livingEntity,
-            damageIndicator.getServer().getPlayer(UUID.fromString(container.get(key, PersistentDataType.STRING))),
-            poisonFormat,
-            event.getFinalDamage()
-        );
+            damageIndicator.spawnIndicator(
+                livingEntity,
+                damageIndicator.getServer().getPlayer(UUID.fromString(container.get(poisonedByKey,
+                    PersistentDataType.STRING))),
+                poisonFormat,
+                event.getFinalDamage()
+            );
+        } else if (container.has(burnedByKey, PersistentDataType.STRING) && event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+            final FileConfiguration configuration = this.damageIndicator.getConfig();
+            DecimalFormat burnFormat = getConfigurationDamageFormat(configuration, Options.BURN_FORMAT).orElseThrow(
+                () -> new IllegalStateException("Plugin configuration did not provide indicator format")
+            );
+
+            damageIndicator.spawnIndicator(
+                livingEntity,
+                damageIndicator.getServer().getPlayer(UUID.fromString(container.get(burnedByKey,
+                    PersistentDataType.STRING))),
+                burnFormat,
+                event.getFinalDamage()
+            );
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -74,7 +91,7 @@ public class BukkitEventListener implements Listener {
 
         if (Objects.isNull(effect)) return;
         for (LivingEntity entity : event.getAffectedEntities()) {
-            markEntityPoisonedAndQueueUnmark(entity, damager.getUniqueId(), effect.getDuration());
+            markEntityAndQueueUnmark(entity, damager.getUniqueId(), effect.getDuration(), poisonedByKey);
         }
     }
 
@@ -84,7 +101,7 @@ public class BukkitEventListener implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player shooter)) return;
 
         event.getAreaEffectCloud().getPersistentDataContainer().set(
-            key, PersistentDataType.STRING, shooter.getUniqueId().toString()
+            poisonedByKey, PersistentDataType.STRING, shooter.getUniqueId().toString()
         );
     }
 
@@ -93,15 +110,16 @@ public class BukkitEventListener implements Listener {
         if (event.getEntity().getBasePotionData().getType() != PotionType.POISON) return;
 
         PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
-        if (!container.has(key, PersistentDataType.STRING)) return;
+        if (!container.has(poisonedByKey, PersistentDataType.STRING)) return;
 
-        final UUID uuid = UUID.fromString(container.get(key, PersistentDataType.STRING));
+        final UUID uuid = UUID.fromString(container.get(poisonedByKey, PersistentDataType.STRING));
 
         for (LivingEntity entity : event.getAffectedEntities()) {
-            markEntityPoisonedAndQueueUnmark(
+            markEntityAndQueueUnmark(
                 entity,
                 uuid,
-                poisonLingeringPotionEffectDuration(event.getEntity().getBasePotionData())
+                poisonLingeringPotionEffectDuration(event.getEntity().getBasePotionData()),
+                poisonedByKey
             );
         }
     }
@@ -117,11 +135,14 @@ public class BukkitEventListener implements Listener {
             configuration,
             Options.FORMAT_INDICATOR
         ).orElseThrow(() -> new IllegalStateException("Plugin configuration did not provide indicator " +
-                                                      "format"));
+            "format"));
 
         if (event.getDamager() instanceof final Projectile projectile) {
             if (!(projectile.getShooter() instanceof Player player)) return;
             damager = player;
+            if (damager.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.ARROW_FIRE) > 0)
+                markEntityAndQueueUnmark(entity, damager.getUniqueId(), 100, burnedByKey);
+
 
             if (!(projectile instanceof AbstractArrow abstractArrow)) return;
 
@@ -133,16 +154,21 @@ public class BukkitEventListener implements Listener {
 
             if (projectile instanceof Arrow arrow) {
                 if (arrow.getBasePotionData().getType() == PotionType.POISON) {
-                    markEntityPoisonedAndQueueUnmark(
+                    markEntityAndQueueUnmark(
                         entity,
                         damager.getUniqueId(),
-                        poisonArrowEffectDuration(((Arrow) projectile).getBasePotionData())
+                        poisonArrowEffectDuration(((Arrow) projectile).getBasePotionData()),
+                        poisonedByKey
                     );
                 }
             }
 
         } else if (event.getDamager() instanceof Player) {
             damager = (Player) event.getDamager();
+
+            //mark burning
+            if (damager.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.FIRE_ASPECT) > 0)
+                markEntityAndQueueUnmark(entity, damager.getUniqueId(), 80, burnedByKey);
 
             if (Utility.isCritical(damager)) {
                 damageFormat = getConfigurationDamageFormat(configuration, Options.CRITICAL_FORMAT).orElseThrow(
@@ -161,18 +187,19 @@ public class BukkitEventListener implements Listener {
         );
     }
 
-    private void markEntityPoisonedAndQueueUnmark(@NotNull LivingEntity entity,
-                                                  @NotNull UUID damagerUUID,
-                                                  int effectDuration) {
-        entity.getPersistentDataContainer().set(key, PersistentDataType.STRING, damagerUUID.toString());
+    private void markEntityAndQueueUnmark(@NotNull LivingEntity entity,
+                                          @NotNull UUID damagerUUID,
+                                          int effectDuration, NamespacedKey markingKey) {
+        entity.getPersistentDataContainer().set(markingKey, PersistentDataType.STRING, damagerUUID.toString());
         this.damageIndicator.getServer().getScheduler().runTaskLater(this.damageIndicator, () -> {
             if (Objects.equals(
-                entity.getPersistentDataContainer().get(key, PersistentDataType.STRING),
+                entity.getPersistentDataContainer().get(markingKey, PersistentDataType.STRING),
                 damagerUUID.toString()
             )) {
-                entity.getPersistentDataContainer().remove(key);
+                entity.getPersistentDataContainer().remove(markingKey);
             }
         }, effectDuration);
     }
+
 
 }
