@@ -33,6 +33,7 @@ ShowToDamagerOnly: true
 IndicatorFormat: "&7-0.#&4❤"
 CriticalIndicatorFormat: "&c-0.#&4❤"
 PoisonIndicatorFormat: "&7-0.#'&#5e8a24'❤"
+BurnIndicatorFormat: "&7-0.#'&#f59e42'❤"
 
 ## The decimal format's locale (BCP47)
 # This determines the locale used for formatting. The formatter uses this e.g. when deciding between a dot ('0.0')
