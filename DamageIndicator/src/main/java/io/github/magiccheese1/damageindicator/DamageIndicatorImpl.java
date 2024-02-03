@@ -74,7 +74,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         for (int i = 0; i < 20; i++) {
             Location location = entity.getLocation().add(
                 random.nextDouble(0, 2) - 1, 1, random.nextDouble(0, 2) - 1);
-            if (!location.getBlock().isPassable())
+            if (location.getBlock().isPassable())
                 return location;
         }
         return entity.getLocation();
