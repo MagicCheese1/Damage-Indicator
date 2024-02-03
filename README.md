@@ -52,9 +52,13 @@ IndicatorTime: 1.5
 
 ## Building
 
-2. Clone this repo
-3. open a terminal and type `gradlew build`
-4. The jar file is at /build/libs/DamageIndicator.jar
+1. Clone this repo
+2. open a terminal and type `gradlew build`
+3. The jar file is at /build/libs/DamageIndicator.jar
+
+## Known Issues
+
+* Arrows of Harming damage is wrong
 
 ## License
 
