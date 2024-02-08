@@ -54,6 +54,7 @@ public class BukkitEventListener implements Listener {
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
 
         PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
+        //POISON DAMAGE
         if (container.has(poisonedByKey, PersistentDataType.STRING) && event.getCause() == EntityDamageEvent.DamageCause.POISON) {
 
             final FileConfiguration configuration = this.damageIndicator.getConfig();
@@ -68,6 +69,7 @@ public class BukkitEventListener implements Listener {
                 poisonFormat,
                 event.getFinalDamage()
             );
+            //FIRE DAMAGE
         } else if (container.has(burnedByKey, PersistentDataType.STRING) && event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
             final FileConfiguration configuration = this.damageIndicator.getConfig();
             DecimalFormat burnFormat = getConfigurationDamageFormat(configuration, Options.BURN_FORMAT).orElseThrow(

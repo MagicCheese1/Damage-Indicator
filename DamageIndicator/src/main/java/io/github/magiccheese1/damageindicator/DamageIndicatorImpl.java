@@ -8,6 +8,7 @@ import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_17_R1
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_18_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R2;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R3;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R2;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R3;
@@ -57,6 +58,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             case "v1_18_R1", "v1_18_R2" -> packetManager = PacketManager1_18_R1.make();
             case "v1_19_R1" -> packetManager = PacketManager1_19_R1.make();
             case "v1_19_R2" -> packetManager = PacketManager1_19_R2.make();
+            case "v1_19_R3" -> packetManager = PacketManager1_19_R3.make();
             case "v1_20_R1" -> packetManager = PacketManager1_20_R1.make();
             case "v1_20_R2" -> packetManager = PacketManager1_20_R2.make();
             case "v1_20_R3" -> packetManager = PacketManager1_20_R3.make();
@@ -70,7 +72,6 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
 
     private static Location findLocation(Entity entity) {
         final ThreadLocalRandom random = ThreadLocalRandom.current();
-        //TODO: Rework indicator positioning logic
         for (int i = 0; i < 20; i++) {
             Location location = entity.getLocation().add(
                 random.nextDouble(0, 2) - 1, 1, random.nextDouble(0, 2) - 1);
@@ -119,6 +120,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
                                           @Nullable Player credit,
                                           @NotNull DecimalFormat format,
                                           double value) {
+
         return spawnIndicator(entity, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
             1.5) * 20);
     }

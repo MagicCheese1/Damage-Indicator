@@ -13,7 +13,7 @@ This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds indicators t
 
 ## Configuration
 
-You can find the config file at \plugins\DamageIndicator\config.yml. By default it should look like this:
+You can find the config file at \plugins\DamageIndicator\config.yml. By default, it should look like this:
 
 ```yaml
 ## Should the indicator be shown to everyone(true) or just the player who dealt the damage(false)
@@ -55,10 +55,6 @@ IndicatorTime: 1.5
 1. Clone this repo
 2. open a terminal and type `gradlew build`
 3. The jar file is at /build/libs/DamageIndicator.jar
-
-## Known Issues
-
-* Arrows of Harming damage is wrong
 
 ## License
 

@@ -16,7 +16,7 @@ public class CommandReload implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String lable,
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label,
                              @NotNull String[] args) {
         if (commandSender.hasPermission("Damageindicator.admin")) {
             if (args.length >= 1) {

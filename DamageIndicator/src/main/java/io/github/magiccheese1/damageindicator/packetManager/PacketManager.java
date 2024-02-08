@@ -18,7 +18,7 @@ public interface PacketManager {
     /**
      * Creates a new entity spawn packet for a virtual entity instance.
      * The packet, when send to the client, causes the client to display the entity instance at the respective location.
-     * The spawn packet, by definition, does not include any meta data about the entity such as the custom name.
+     * The spawn packet, by definition, does not include any metadata about the entity such as the custom name.
      *
      * @param entity the entity instance for which the spawn packet is to be constructed. This instance should be an
      *               instance of the server internal entity class, instead of the spigot/bukkit classes. It should hence
@@ -52,7 +52,7 @@ public interface PacketManager {
      * Creates a new entity destroy packet for a virtual entity instance.
      * The packet, when send to the client, causes the client to no longer display the entity for the user.
      *
-     * @param entity the entity instance for which the destroy packet is to be constructed. This instance should be an
+     * @param entity the entity instance for which the destroy-packet is to be constructed. This instance should be an
      *               instance of the server internal entity class, instead of the spigot/bukkit classes.
      *               It should hence most likely be constructed through {@link #buildEntityArmorStand(Location,
      *               String)}.

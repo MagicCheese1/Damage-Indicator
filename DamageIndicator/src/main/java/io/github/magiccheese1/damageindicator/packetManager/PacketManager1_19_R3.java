@@ -100,8 +100,6 @@ public final class PacketManager1_19_R3 implements PacketManager {
         try {
             final int entityId = (int) this.entityGetIdMethod.invoke(entity);
             final Object synchedEntityData = this.entityGetDataMethod.invoke(entity);
-//            return new PacketPlayOutEntityMetadata(entityId, this.synchedEntityDataGetDirtyMethod.invoke
-//            (synchedEntityData));
             return this.clientboundSetEntityDataPacketInit.newInstance(entityId,
                 this.synchedEntityDataPackDirtyMethod.invoke(synchedEntityData));
         } catch (final ReflectiveOperationException e) {
