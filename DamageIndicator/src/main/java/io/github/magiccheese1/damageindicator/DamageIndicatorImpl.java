@@ -121,8 +121,8 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
                                           @NotNull DecimalFormat format,
                                           double value) {
 
-        return spawnIndicator(entity, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
-            1.5) * 20);
+        return spawnIndicator(entity, credit, format, value, (long) (getConfig().getDouble(Options.INDICATOR_TIME,
+            1.5) * 20));
     }
 
     @Override
@@ -131,8 +131,8 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
                                           @Nullable Player credit,
                                           @NotNull DecimalFormat format,
                                           double value) {
-        return spawnIndicator(location, credit, format, value, (long) getConfig().getDouble(Options.INDICATOR_TIME,
-            1.5) * 20);
+        return spawnIndicator(location, credit, format, value, (long) (getConfig().getDouble(Options.INDICATOR_TIME,
+            1.5) * 20));
     }
 
     @Override
