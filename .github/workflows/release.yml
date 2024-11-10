@@ -34,7 +34,10 @@ jobs:
           java-version: '8'
 
       - name: install spigot 1.16.5
-        run: cd BuildTools && chmod -x ./installSpigot.sh && ./installSpigot.sh 1.16.5
+        run: |
+          cd BuildTools
+          chmod -x ./installSpigot.sh
+          ./installSpigot.sh 1.16.5
 
       - name: set up JDK 17
         uses: actions/setup-java@v4
@@ -42,7 +45,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: install spigot 1.17.1, 1.18.2, 1.19.x
-        run: cd BuildTools&& chmod -x ./installSpigot.sh && ./installSpigot.sh 1.17.1 && ./installSpigot.sh 1.18.2 && ./installSpigot.sh 1.19.2 && ./installSpigot.sh 1.19.3 && ./installSpigot.sh 1.19.4
+        run: |
+          cd BuildTools 
+          chmod -x ./installSpigot.sh
+          ./installSpigot.sh 1.17.1
+          ./installSpigot.sh 1.18.2
+          ./installSpigot.sh 1.19.2
+          ./installSpigot.sh 1.19.3
+          ./installSpigot.sh 1.19.4
 
       - name: set up JDK 21
         uses: actions/setup-java@v4
@@ -51,7 +61,12 @@ jobs:
           java-version: '21'
 
       - name: install spigot 1.20.x
-        run: cd BuildTools && chmod -x ./installSpigot.sh && ./installSpigot.sh 1.20.1 && ./installSpigot.sh 1.20.2 && ./installSpigot.sh 1.20.4
+        run: |
+          cd BuildTools
+          chmod -x ./installSpigot.sh
+          ./installSpigot.sh 1.20.1
+          ./installSpigot.sh 1.20.2
+          ./installSpigot.sh 1.20.4
 
       - name: return to root
         run: cd ..
