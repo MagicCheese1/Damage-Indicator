@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir $1
-cp buildtools.jar $1/buildtools.jar
+cp BuildTools.jar $1/BuildTools.jar
 cd $1
 java -jar BuildTools.jar -rev $1
 cd ..
