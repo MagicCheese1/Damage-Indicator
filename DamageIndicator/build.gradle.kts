@@ -4,12 +4,6 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3" // Generates plugin.yml
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://oss.sonatype.org/content/groups/public/")
-}
-
 dependencies {
     implementation("com.tchristofferson:ConfigUpdater:2.0-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:22.0.0")
