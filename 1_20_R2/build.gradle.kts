@@ -16,7 +16,7 @@ tasks {
 
         inputTask.set(jar)
 
-        archiveName.set("${project.name}.jar")
+        archiveName.set("${project.name}-${project.version}.jar")
     }
 }
 
