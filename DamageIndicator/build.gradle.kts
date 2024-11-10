@@ -7,7 +7,7 @@ plugins {
 dependencies {
     implementation("com.tchristofferson:ConfigUpdater:2.0-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:22.0.0")
-    compileOnly("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
     implementation(project(":API"))
     implementation(project(":1_16_R3"))
     implementation(project(":1_17_R1"))
@@ -21,7 +21,7 @@ dependencies {
 
 
     testImplementation("junit:junit:4.13.1")
-    testImplementation("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
 }
 tasks {
     test {
