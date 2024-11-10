@@ -22,7 +22,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: prepare Buildtools
-        run: mkdir BuildTools -p && cd BuildTools && wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
+        run: ls && mkdir BuildTools -p && cd BuildTools && wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
 
       - name: prepare installSpigot script
         run: cp ../scripts/installSpigot.sh ./installSpigot.sh && chmod -x ./installSpigot.sh
