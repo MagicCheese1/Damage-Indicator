@@ -63,7 +63,7 @@ jobs:
       - name: install spigot 1.20.x
         run: |
           cd BuildTools
-          chmod +x ./installSpigot.
+          chmod +x ./installSpigot.sh
           ./installSpigot.sh 1.20.1
           ./installSpigot.sh 1.20.2
           ./installSpigot.sh 1.20.4
