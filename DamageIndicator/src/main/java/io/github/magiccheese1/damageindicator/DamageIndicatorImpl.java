@@ -84,11 +84,11 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         getServer().getServicesManager().register(DamageIndicator.class, this, this, ServicePriority.Normal);
     }
 
-    private static Location findLocation(Entity entity) {
+    private static Location findLocation(LivingEntity entity) {
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int i = 0; i < 20; i++) {
             Location location = entity.getLocation().add(
-                random.nextDouble(0, 2) - 1, 1, random.nextDouble(0, 2) - 1);
+                random.nextDouble(0, 2) - 1, entity.getEyeHeight(), random.nextDouble(0, 2) - 1);
             if (location.getBlock().isPassable())
                 return location;
         }
