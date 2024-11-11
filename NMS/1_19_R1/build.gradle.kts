@@ -2,10 +2,6 @@ plugins {
     id("java")
     id("io.github.patrick.remapper") version "1.4.2"
 }
-java {
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
-}
-tasks.withType<JavaCompile> { options.release.set(16) }
 
 dependencies {
     compileOnly("org.jetbrains:annotations:22.0.0")

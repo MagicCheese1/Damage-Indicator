@@ -8,8 +8,9 @@ subprojects {
     }
 
     configure<JavaPluginExtension> {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(16))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
+    tasks.withType<JavaCompile> { options.release.set(16) }
 
     repositories {
         mavenCentral()
