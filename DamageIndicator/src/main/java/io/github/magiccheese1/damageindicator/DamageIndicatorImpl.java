@@ -53,15 +53,15 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         // Get current minecraft version
         final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         switch (serverVersion) {
-            case "v1_16_R3" -> packetManager = PacketManager1_16_R3.make();
-            case "v1_17_R1" -> packetManager = PacketManager1_17_R1.make();
-            case "v1_18_R1", "v1_18_R2" -> packetManager = PacketManager1_18_R1.make();
-            case "v1_19_R1" -> packetManager = PacketManager1_19_R1.make();
-            case "v1_19_R2" -> packetManager = PacketManager1_19_R2.make();
-            case "v1_19_R3" -> packetManager = PacketManager1_19_R3.make();
-            case "v1_20_R1" -> packetManager = PacketManager1_20_R1.make();
-            case "v1_20_R2" -> packetManager = PacketManager1_20_R2.make();
-            case "v1_20_R3" -> packetManager = PacketManager1_20_R3.make();
+            case "v1_16_R3" -> packetManager = new PacketManager1_16_R3();
+            case "v1_17_R1" -> packetManager = new PacketManager1_17_R1();
+            case "v1_18_R1", "v1_18_R2" -> packetManager = new PacketManager1_18_R1();
+            case "v1_19_R1" -> packetManager = new PacketManager1_19_R1();
+            case "v1_19_R2" -> packetManager = new PacketManager1_19_R2();
+            case "v1_19_R3" -> packetManager = new PacketManager1_19_R3();
+            case "v1_20_R1" -> packetManager = new PacketManager1_20_R1();
+            case "v1_20_R2" -> packetManager = new PacketManager1_20_R2();
+            case "v1_20_R3" -> packetManager = new PacketManager1_20_R3();
             default -> throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));

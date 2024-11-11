@@ -1,6 +1,6 @@
 subprojects {
     group = "io.github.magiccheese1"
-    version = "2.0.1"
+    version = "2.0.2-Snapshot"
     apply(plugin = "java")
 
     tasks.withType<JavaCompile> {
@@ -8,8 +8,9 @@ subprojects {
     }
 
     configure<JavaPluginExtension> {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(16))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
+    tasks.withType<JavaCompile> { options.release.set(16) }
 
     repositories {
         mavenCentral()

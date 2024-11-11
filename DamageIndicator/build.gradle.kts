@@ -4,20 +4,23 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3" // Generates plugin.yml
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://oss.sonatype.org/content/groups/public/")
-}
-
 dependencies {
     implementation("com.tchristofferson:ConfigUpdater:2.0-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:22.0.0")
-    compileOnly("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
     implementation(project(":API"))
+    implementation(project(":NMS:1_16_R3"))
+    implementation(project(":NMS:1_17_R1"))
+    implementation(project(":NMS:1_18_R1"))
+    implementation(project(":NMS:1_19_R1"))
+    implementation(project(":NMS:1_19_R2"))
+    implementation(project(":NMS:1_19_R3"))
+    implementation(project(":NMS:1_20_R1"))
+    implementation(project(":NMS:1_20_R2"))
+    implementation(project(":NMS:1_20_R3"))
 
     testImplementation("junit:junit:4.13.1")
-    testImplementation("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
 }
 tasks {
     test {
