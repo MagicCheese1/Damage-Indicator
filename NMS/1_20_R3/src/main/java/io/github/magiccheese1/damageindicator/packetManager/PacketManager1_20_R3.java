@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 /**
- * Implementation of the packet manager for the 1.19 minecraft java version.
+ * Implementation of the packet manager for the 1.20 minecraft java version.
  * The implementation uses a mixture of direct calls against the re-obfuscated server internals and reflection.
  */
 public final class PacketManager1_20_R3 implements PacketManager {
