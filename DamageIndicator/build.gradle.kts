@@ -19,6 +19,9 @@ dependencies {
     implementation(project(":NMS:1_20_R2"))
     implementation(project(":NMS:1_20_R3"))
     implementation(project(":NMS:1_20_R4"))
+    implementation(project(":NMS:1_21_R1"))
+    implementation(project(":NMS:1_21_R2"))
+
 
     testImplementation("junit:junit:4.13.1")
     testImplementation("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")

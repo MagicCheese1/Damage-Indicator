@@ -60,7 +60,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: install spigot 1.20.x
+      - name: install spigot 1.20.x, 1.21.x
         run: |
           cd BuildTools
           chmod +x ./installSpigot.sh
@@ -68,6 +68,8 @@ jobs:
           ./installSpigot.sh 1.20.2
           ./installSpigot.sh 1.20.4
           ./installSpigot.sh 1.20.6
+          ./installSpigot.sh 1.21.1
+          ./installSpigot.sh 1.21.3
 
       - name: return to root
         run: cd ..
