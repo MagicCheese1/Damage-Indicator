@@ -12,6 +12,7 @@ import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R3
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R2;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R3;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_20_R4;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -51,7 +52,14 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
         getCommand("damageindicator").setExecutor(new CommandReload(this));
 
         // Get current minecraft version
-        final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
+        final String serverName = Bukkit.getServer().getClass().getPackage().getName();
+        String serverVersion = null;
+        if (!serverName.contains(".")) {
+            serverVersion = serverName.split("\\.")[3].trim();
+        }
+        else {
+            serverVersion = Bukkit.getServer().getBukkitVersion().split("-")[0].trim();
+        }
         switch (serverVersion) {
             case "v1_16_R3" -> packetManager = new PacketManager1_16_R3();
             case "v1_17_R1" -> packetManager = new PacketManager1_17_R1();
@@ -62,6 +70,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             case "v1_20_R1" -> packetManager = new PacketManager1_20_R1();
             case "v1_20_R2" -> packetManager = new PacketManager1_20_R2();
             case "v1_20_R3" -> packetManager = new PacketManager1_20_R3();
+            case "1.20.6" -> packetManager = new PacketManager1_20_R4();
             default -> throw new RuntimeException("Failed to create version specific server accessor");
         }
         getLogger().info(String.format("Using server version accessor for %s", serverVersion));
