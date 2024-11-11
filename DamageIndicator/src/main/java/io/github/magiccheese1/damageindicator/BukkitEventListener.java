@@ -22,6 +22,7 @@ import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -186,19 +187,23 @@ public class BukkitEventListener implements Listener {
                 }
 
                 if (projectile instanceof Arrow arrow) {
-                    if (arrow.getBasePotionData().getType() == PotionType.POISON) {
-                        markEntityAndQueueUnmark(
-                            entity,
-                            damager.getUniqueId(),
-                            poisonArrowEffectDuration(((Arrow) projectile).getBasePotionData()),
-                            poisonedByKey
-                        );
-                    } else if (arrow.getBasePotionData().getType() == PotionType.INSTANT_DAMAGE) {
-                        damageFormat =
-                            getConfigurationDamageFormat(configuration, Options.INSTANT_DAMAGE_FORMAT).orElseThrow(
-                                () -> new IllegalStateException("Plugin configuration did not provide instant damage " +
-                                    "indicator " +
-                                    "format"));
+                    if (arrow.getBasePotionData() != null) { // Can return null in newer versions
+                        PotionData potionData = arrow.getBasePotionData();
+                        if (potionData.getType() == PotionType.POISON) {
+                            markEntityAndQueueUnmark(
+                                entity,
+                                damager.getUniqueId(),
+                                poisonArrowEffectDuration(((Arrow) projectile).getBasePotionData()),
+                                poisonedByKey
+                            );
+                        } else if (potionData.getType() == PotionType.INSTANT_DAMAGE) {
+                            damageFormat =
+                                getConfigurationDamageFormat(configuration, Options.INSTANT_DAMAGE_FORMAT).orElseThrow(
+                                    () -> new IllegalStateException("Plugin configuration did not provide instant " +
+                                        "damage " +
+                                        "indicator " +
+                                        "format"));
+                        }
                     }
                 }
             }
