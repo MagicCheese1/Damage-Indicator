@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
