@@ -29,7 +29,7 @@ public final class PacketManager1_21_R1 implements PacketManager {
     @Override
     public Object buildEntitySpawnPacket(@NotNull Object entity) {
         Entity entity1 = (Entity) entity;
-        return new ClientboundAddEntityPacket((Entity)entity, 0, entity1.getOnPos());
+        return new ClientboundAddEntityPacket(entity1.getId(), entity1.getUUID(), entity1.getX(), entity1.getY(), entity1.getZ(), entity1.getXRot(), entity1.getYRot(),entity1.getType(),0, Vec3.ZERO, entity1.getYHeadRot());
     }
 
     @NotNull
