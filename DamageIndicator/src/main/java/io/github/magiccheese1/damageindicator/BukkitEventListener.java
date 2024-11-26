@@ -105,7 +105,7 @@ public class BukkitEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void lingeringPotionSplash(LingeringPotionSplashEvent event) {
         if (!(event.getEntity().getShooter() instanceof Player shooter)) return;
-
+        if(event.getAreaEffectCloud().getBasePotionData() == null) return;
         if (event.getAreaEffectCloud().getBasePotionData().getType() == PotionType.POISON) {
             event.getAreaEffectCloud().getPersistentDataContainer().set(
                 poisonedByKey, PersistentDataType.STRING, shooter.getUniqueId().toString()
@@ -119,6 +119,7 @@ public class BukkitEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void areaEffectCloudApply(AreaEffectCloudApplyEvent event) {
+        if(event.getEntity().getBasePotionData() == null) return;
         if (event.getEntity().getBasePotionData().getType() != PotionType.POISON) return;
 
         PersistentDataContainer container = event.getEntity().getPersistentDataContainer();
@@ -149,6 +150,7 @@ public class BukkitEventListener implements Listener {
         ).orElseThrow(() -> new IllegalStateException("Plugin configuration did not provide indicator " +
             "format"));
         if (event.getDamager() instanceof final AreaEffectCloud areaEffectCloud) {
+            if(areaEffectCloud.getBasePotionData() == null) return;
             if (areaEffectCloud.getBasePotionData().getType() == PotionType.INSTANT_DAMAGE) {
                 if (areaEffectCloud.getPersistentDataContainer().has(harmedByKey, PersistentDataType.STRING)) {
                     damager =
