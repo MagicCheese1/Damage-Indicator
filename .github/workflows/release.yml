@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Cache Spigot and gradle
-        uses: actions/cache@v2
+        id: cache-spigot-gradle
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/
@@ -18,8 +19,6 @@ jobs:
             ~/.gradle/wrapper/
             ./BuildTools/
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'BuildTools/buildtools.jar') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       - name: prepare Buildtools
         run:  mkdir BuildTools -p && cd BuildTools && wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
