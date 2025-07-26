@@ -65,15 +65,15 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             serverVersion = Bukkit.getServer().getBukkitVersion().split("-")[0].trim();
         }
         switch (serverVersion) {
-            case "v1_16_R3" -> packetManager = new PacketManager1_16_R3();
-            case "v1_17_R1" -> packetManager = new PacketManager1_17_R1();
-            case "v1_18_R1", "v1_18_R2" -> packetManager = new PacketManager1_18_R1();
-            case "v1_19_R1" -> packetManager = new PacketManager1_19_R1();
-            case "v1_19_R2" -> packetManager = new PacketManager1_19_R2();
-            case "v1_19_R3" -> packetManager = new PacketManager1_19_R3();
-            case "v1_20_R1" -> packetManager = new PacketManager1_20_R1();
-            case "v1_20_R2" -> packetManager = new PacketManager1_20_R2();
-            case "v1_20_R3" -> packetManager = new PacketManager1_20_R3();
+            case "1.16.4", "1.16.5" -> packetManager = new PacketManager1_16_R3();
+            case "1.17", "1.17.1" -> packetManager = new PacketManager1_17_R1();
+            case "1.18", "1.18.1", "1.18.2" -> packetManager = new PacketManager1_18_R1();
+            case "1.19", "1.19.1", "1.19.2" -> packetManager = new PacketManager1_19_R1();
+            case "1.19.3" -> packetManager = new PacketManager1_19_R2();
+            case "1.19.4" -> packetManager = new PacketManager1_19_R3();
+            case "1.20", "1.20.1" -> packetManager = new PacketManager1_20_R1();
+            case "1.20.2" -> packetManager = new PacketManager1_20_R2();
+            case "1.20.3", "1.20.4" -> packetManager = new PacketManager1_20_R3();
             case "1.20.5", "1.20.6" -> packetManager = new PacketManager1_20_R4();
             case "1.21", "1.21.1", "1.21.2" -> packetManager = new PacketManager1_21_R1();
             case "1.21.3" -> packetManager = new PacketManager1_21_R2();
