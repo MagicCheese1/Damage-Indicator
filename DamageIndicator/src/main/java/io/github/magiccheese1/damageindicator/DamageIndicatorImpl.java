@@ -79,7 +79,7 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             case "1.21.3" -> packetManager = new PacketManager1_21_R2();
             case "1.21.4" -> packetManager = new PacketManager1_21_R3();
             case "1.21.5" -> packetManager = new PacketManager1_21_R4();
-            case "1.21.6", "1.21.7" -> packetManager = new PacketManager1_21_R5();
+            case "1.21.6", "1.21.7", "1.21.8" -> packetManager = new PacketManager1_21_R5();
 
             default -> throw new RuntimeException("Failed to create version specific server accessor");
         }
