@@ -221,6 +221,11 @@ public class BukkitEventListener implements Listener {
                     () -> new IllegalStateException("Plugin configuration did not provide critical indicator format")
                 );
             }
+            if(event.getCause() == EntityDamageEvent.DamageCause.THORNS) {
+                damageFormat = getConfigurationDamageFormat(configuration, Options.THORNS_DAMAGE_FORMAT).orElseThrow(
+                    () -> new IllegalStateException("Plugin configuration did not provide thorns indicator format")
+                );
+            }
         }
 
         if (damager == null) return; // Could not parse the damaging player from the event.
