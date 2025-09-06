@@ -16,7 +16,7 @@ This is a plugin for Minecraft Bukkit/Spigot/Paper servers. It adds indicators t
 You can find the config file at \plugins\DamageIndicator\config.yml. By default, it should look like this:
 
 ```yaml
-## Should the indicator be shown to everyone(true) or just the player who dealt the damage(false)
+## Should the indicator be shown to everyone(false) or just the player who dealt the damage(true)
 ShowToDamagerOnly: true
 
 ## The format for showing the damage
