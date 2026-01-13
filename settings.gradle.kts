@@ -7,7 +7,6 @@ plugins {
 include(
     "API",
     "DamageIndicator",
-    ":NMS:1_16_R3",
     ":NMS:1_17_R1",
     ":NMS:1_18_R1",
     ":NMS:1_19_R1",
@@ -22,5 +21,7 @@ include(
     ":NMS:1_21_R3",
     ":NMS:1_21_R4",
     ":NMS:1_21_R5",
+    ":NMS:1_21_R6",
+    ":NMS:1_21_R7",
 )
 

@@ -3,7 +3,6 @@ package io.github.magiccheese1.damageindicator;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import io.github.magiccheese1.damageindicator.config.Options;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager;
-import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_16_R3;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_17_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_18_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R1;
@@ -18,6 +17,8 @@ import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R2
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R3;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R4;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R5;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R6;
+import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_21_R7;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -65,7 +66,6 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             serverVersion = Bukkit.getServer().getBukkitVersion().split("-")[0].trim();
         }
         switch (serverVersion) {
-            case "1.16.4", "1.16.5" -> packetManager = new PacketManager1_16_R3();
             case "1.17", "1.17.1" -> packetManager = new PacketManager1_17_R1();
             case "1.18", "1.18.1", "1.18.2" -> packetManager = new PacketManager1_18_R1();
             case "1.19", "1.19.1", "1.19.2" -> packetManager = new PacketManager1_19_R1();
@@ -79,7 +79,9 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             case "1.21.3" -> packetManager = new PacketManager1_21_R2();
             case "1.21.4" -> packetManager = new PacketManager1_21_R3();
             case "1.21.5" -> packetManager = new PacketManager1_21_R4();
-            case "1.21.6", "1.21.7", "1.21.8" -> packetManager = new PacketManager1_21_R5();
+            case "1.21.6", "1.21.7", "1.21.8", "1.21.9" -> packetManager = new PacketManager1_21_R5();
+            case "1.21.10" -> packetManager = new PacketManager1_21_R6();
+            case "1.21.11" -> packetManager = new PacketManager1_21_R7();
 
             default -> throw new RuntimeException("Failed to create version specific server accessor");
         }

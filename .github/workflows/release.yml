@@ -26,18 +26,6 @@ jobs:
       - name: prepare installSpigot script
         run: cd BuildTools && cp ../scripts/installSpigot.sh ./installSpigot.sh && chmod -x ./installSpigot.sh
 
-      - name: set up JDK 8
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-
-      - name: install spigot 1.16.5
-        run: |
-          cd BuildTools
-          chmod +x ./installSpigot.sh
-          ./installSpigot.sh 1.16.5
-
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -72,6 +60,8 @@ jobs:
           ./installSpigot.sh 1.21.4
           ./installSpigot.sh 1.21.5
           ./installSpigot.sh 1.21.6
+          ./installSpigot.sh 1.21.10
+          ./installSpigot.sh 1.21.11
 
       - name: return to root
         run: cd ..
