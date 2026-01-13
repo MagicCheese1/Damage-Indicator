@@ -61,6 +61,7 @@ jobs:
           ./installSpigot.sh 1.21.5
           ./installSpigot.sh 1.21.6
           ./installSpigot.sh 1.21.10
+          ./installSpigot.sh 1.21.11
 
       - name: return to root
         run: cd ..
