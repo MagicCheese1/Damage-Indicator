@@ -3,7 +3,6 @@ package io.github.magiccheese1.damageindicator;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import io.github.magiccheese1.damageindicator.config.Options;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager;
-import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_16_R3;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_17_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_18_R1;
 import io.github.magiccheese1.damageindicator.packetManager.PacketManager1_19_R1;
@@ -66,7 +65,6 @@ public class DamageIndicatorImpl extends JavaPlugin implements DamageIndicator {
             serverVersion = Bukkit.getServer().getBukkitVersion().split("-")[0].trim();
         }
         switch (serverVersion) {
-            case "1.16.4", "1.16.5" -> packetManager = new PacketManager1_16_R3();
             case "1.17", "1.17.1" -> packetManager = new PacketManager1_17_R1();
             case "1.18", "1.18.1", "1.18.2" -> packetManager = new PacketManager1_18_R1();
             case "1.19", "1.19.1", "1.19.2" -> packetManager = new PacketManager1_19_R1();
